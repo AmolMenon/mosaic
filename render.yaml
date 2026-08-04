@@ -41,10 +41,6 @@ services:
     env: docker
     repo: https://github.com/render-examples/redis.git
     plan: free
-    disk:
-      name: redis-data
-      mountPath: /var/lib/redis
-      sizeGB: 1
 
 databases:
   # Managed PostgreSQL with pgvector support
