@@ -4,6 +4,7 @@ import { clsx } from "clsx";
 export interface SidebarProps extends React.HTMLAttributes<HTMLDivElement> {
   width?: number | string;
   children?: React.ReactNode;
+  className?: string;
 }
 
 export function Sidebar({ children, width = 320, className, ...props }: SidebarProps) {
