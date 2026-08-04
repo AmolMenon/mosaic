@@ -1,6 +1,6 @@
-export * from "./foundation/ThemeProvider";
-export * from "./navigation/AppShell";
-export * from "./navigation/Sidebar";
-export * from "./questions/EvidenceCard";
-export * from "./memo/InlineCitation";
+export * from "./src/foundation/ThemeProvider";
+export * from "./src/navigation/AppShell";
+export * from "./src/navigation/Sidebar";
+export * from "./src/questions/EvidenceCard";
+export * from "./src/memo/InlineCitation";
 // Additional components exported here

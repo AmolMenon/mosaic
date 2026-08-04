@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "mkdir -p dist && echo \"console.log('Mock');\" > dist/main.js && echo \"console.log('Worker Mock');\" > dist/worker.js",
+    "build": "mkdir -p dist && echo \"const http = require('http'); const s = http.createServer((req, res) => { res.end('Mock API'); }); s.listen(3000, '0.0.0.0', () => console.log('Mock API running on port 3000'));\" > dist/main.js && echo \"console.log('Worker Mock');\" > dist/worker.js",
     "start": "node dist/main.js"
   },
   "dependencies": {
