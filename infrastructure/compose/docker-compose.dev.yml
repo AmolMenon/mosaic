@@ -1,0 +1,56 @@
+version: '3.8'
+
+services:
+  api:
+    build:
+      context: ../../
+      dockerfile: infrastructure/docker/api.Dockerfile
+      target: builder
+    command: npm run dev --workspace=apps/api
+    ports:
+      - "3000:3000"
+    volumes:
+      - ../../:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - DATABASE_URL=postgres://user:password@db:5432/mosaic
+    depends_on:
+      db:
+        condition: service_healthy
+
+  web:
+    build:
+      context: ../../
+      dockerfile: infrastructure/docker/web.Dockerfile
+      target: builder
+    command: npm run dev --workspace=apps/web
+    ports:
+      - "3001:3001"
+    volumes:
+      - ../../:/app
+      - /app/node_modules
+    environment:
+      - NODE_ENV=development
+      - NEXT_PUBLIC_API_URL=http://localhost:3000/api/v1
+    depends_on:
+      - api
+
+  db:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=mosaic
+    ports:
+      - "5432:5432"
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d mosaic"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  db_data:

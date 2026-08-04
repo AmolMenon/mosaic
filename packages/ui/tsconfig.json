@@ -1,0 +1,11 @@
+{
+  "extends": "@mosaic/config/next.json",
+  "compilerOptions": {
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "paths": {
+      "@/*": ["./*"]
+    }
+  },
+  "include": ["."]
+}
