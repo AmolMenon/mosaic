@@ -27,6 +27,8 @@
     "@types/react": "^18",
     "@types/react-dom": "^18",
     "typescript": "^5",
-    "@mosaic/config": "workspace:*"
+    "@mosaic/config": "workspace:*",
+    "tailwindcss": "^4.0.0",
+    "@tailwindcss/postcss": "^4.0.0"
   }
 }
