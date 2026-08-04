@@ -1,0 +1,13 @@
+{
+  "name": "api",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "build": "echo 'Mock API build successful'",
+    "start": "echo 'Mock API starting...'"
+  },
+  "dependencies": {
+    "@google/genai": "^0.1.2",
+    "zod": "^3.22.4"
+  }
+}
