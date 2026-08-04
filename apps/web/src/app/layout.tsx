@@ -1,5 +1,9 @@
 import type { Metadata } from "next";
-import "@mosaic/ui/styles/globals.css"; // We will add this later when building UI
+import { Inter, Outfit } from "next/font/google";
+import "@mosaic/ui/styles/globals.css";
+
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
+const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 export const metadata: Metadata = {
   title: "Mosaic | The Evidence Layer",
@@ -12,8 +16,8 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body>{children}</body>
+    <html lang="en" className={`${inter.variable} ${outfit.variable}`}>
+      <body style={{ margin: 0, padding: 0 }}>{children}</body>
     </html>
   );
 }
