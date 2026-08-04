@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { useMemoStore } from "../../store/memo";
 import { mockMemoApolloIC } from "@mosaic/testing";

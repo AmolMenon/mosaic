@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { useDiscoveryStore } from "../../store/discovery";
 import { mockDiscoveryResultPrinciple, mockPricingEvolution } from "@mosaic/testing";

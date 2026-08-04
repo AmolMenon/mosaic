@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { useNarrativeStore } from "../../store/narrative";
 import { mockNarrative, mockPricingSection, mockInsightPricing } from "@mosaic/testing";

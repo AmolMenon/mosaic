@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { useIngestionStore } from "../../store/ingestion";
 import { mockPipelineTranscript } from "@mosaic/testing";

@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { AppShell, Sidebar } from "@mosaic/ui";
 import { LeftPanel } from "../../features/knowledge/LeftPanel";

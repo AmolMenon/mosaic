@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { useQuestionsStore } from "../../store/questions";
 import { mockQuestionPricing, mockHypothesisPremium, mockHypothesisVulnerable, mockEvidence1, mockEvidence2 } from "@mosaic/testing";

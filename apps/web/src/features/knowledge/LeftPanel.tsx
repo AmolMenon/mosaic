@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { useKnowledgeStore } from "../../store/knowledge";
 import { mockKnowledgeAssetPricing, mockTaxonomyRoot, mockTaxonomyPricing, mockTaxonomyPremiumization, mockTaxonomyElasticity } from "@mosaic/testing";

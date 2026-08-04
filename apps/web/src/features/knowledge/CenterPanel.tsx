@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { useKnowledgeStore } from "../../store/knowledge";
 import { mockKnowledgeAssetPricing, mockPrinciplePricingPower, mockChallengeHelios } from "@mosaic/testing";

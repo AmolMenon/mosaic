@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Project } from "@mosaic/contracts";
 import { mockProjectQuestions, mockClaim1, mockClaim2, mockEvidence1, mockEvidence2, mockLink1, mockLink2, mockInsight1 } from "@mosaic/testing";

@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { useDataRoomStore } from "../../store/data-room";
 import { clsx } from "clsx";

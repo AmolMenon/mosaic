@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { Project } from "@mosaic/contracts";
 import { useEvidenceTrace } from "../../store/evidence-trace";

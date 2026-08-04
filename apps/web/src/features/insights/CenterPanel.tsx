@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { useInsightsStore } from "../../store/insights";
 import { mockInsightPricing } from "@mosaic/testing";

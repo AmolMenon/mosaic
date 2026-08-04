@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { useAiStore } from "../../store/ai";
 import { mockHypothesisProposal } from "@mosaic/testing";
@@ -36,7 +37,7 @@ export function ContextPanel() {
             <span className="text-text-tertiary">{proposal.reasoning.supportingEvidenceIds.length}</span>
           </div>
           <div className="space-y-1">
-            {proposal.reasoning.supportingEvidenceIds.map(id => (
+            {proposal.reasoning.supportingEvidenceIds.map((id: string) => (
               <div key={id} className="text-xs p-2 border border-border-subtle rounded bg-bg-base hover:bg-bg-surface-hover cursor-pointer truncate text-accent-primary">
                 📄 Q3 Earnings Transcript (Paragraph 42)
               </div>
@@ -51,7 +52,7 @@ export function ContextPanel() {
             <span className="text-text-tertiary">{proposal.reasoning.institutionalPrinciples.length}</span>
           </div>
           <div className="space-y-1">
-            {proposal.reasoning.institutionalPrinciples.map(id => (
+            {proposal.reasoning.institutionalPrinciples.map((id: string) => (
               <div key={id} className="text-xs p-2 border border-border-subtle rounded bg-bg-base hover:bg-bg-surface-hover cursor-pointer truncate text-accent-success">
                 💡 Enterprise Price Premium Tolerance
               </div>
@@ -63,7 +64,7 @@ export function ContextPanel() {
         <div className="pt-4 border-t border-border-subtle">
           <div className="text-xs font-semibold text-text-secondary mb-2">Assumptions Made</div>
           <ul className="list-disc pl-4 text-xs text-text-primary space-y-1 mb-4">
-            {proposal.reasoning.assumptionsMade.map((a, i) => <li key={i}>{a}</li>)}
+            {proposal.reasoning.assumptionsMade.map((a: string, i: number) => <li key={i}>{a}</li>)}
           </ul>
 
           <div className="text-xs font-semibold text-accent-warning mb-2">Uncertainty Remaining</div>

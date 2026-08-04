@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { useAiStore } from "../../store/ai";
 import { mockAssignmentChallengePricing } from "@mosaic/testing";

@@ -1,3 +1,4 @@
+"use client";
 import React from "react";
 import { CenterPanel } from "../../../features/projects/CenterPanel";
 import { mockProjectLBO } from "@mosaic/testing";
