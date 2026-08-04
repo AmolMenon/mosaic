@@ -1,5 +1,5 @@
 import { Insight, InsightCollection, InsightRelationship } from "@mosaic/contracts";
-import { mockHypothesisPremium, mockHypothesisVulnerable, mockQuestionPricing, mockEvidence1, mockEvidence2 } from "./questions";
+import { mockHypothesisPremium, mockHypothesisVulnerable, mockQuestionPricing } from "./questions";
 
 export const mockInsightPricing: Insight = {
   id: "ins_pricing_power_01",
@@ -15,8 +15,8 @@ export const mockInsightPricing: Insight = {
   validation: {
     supportingHypothesisIds: [mockHypothesisPremium.id],
     conflictingHypothesisIds: [mockHypothesisVulnerable.id],
-    supportingEvidenceIds: [mockEvidence1.id],
-    contradictingEvidenceIds: [mockEvidence2.id],
+    supportingEvidenceIds: ["ev_1"],
+    contradictingEvidenceIds: ["ev_2"],
     outstandingAssumptionIds: mockHypothesisPremium.assumptions.map(a => a.id),
     outstandingRiskIds: mockHypothesisPremium.risks.map(r => r.id),
     confidence: "medium",
