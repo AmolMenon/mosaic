@@ -2,10 +2,10 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-COPY package.json pnpm-workspace.yaml turbo.json ./
-RUN npm install -g pnpm && pnpm install
-
+RUN npm install -g pnpm
 COPY . .
+RUN pnpm install
+
 # Assuming worker is part of the API workspace or a separate worker workspace
 RUN pnpm --filter api run build
 

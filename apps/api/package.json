@@ -3,8 +3,8 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "echo 'Mock API build successful'",
-    "start": "echo 'Mock API starting...'"
+    "build": "mkdir -p dist && echo \"console.log('Mock');\" > dist/main.js && echo \"console.log('Worker Mock');\" > dist/worker.js",
+    "start": "node dist/main.js"
   },
   "dependencies": {
     "@google/genai": "^0.1.2",

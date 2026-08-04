@@ -4,10 +4,10 @@ WORKDIR /app
 # Install dependencies needed for node-gyp if required
 RUN apk add --no-cache python3 make g++
 
-COPY package.json pnpm-workspace.yaml turbo.json ./
-RUN npm install -g pnpm && pnpm install
-
+RUN npm install -g pnpm
 COPY . .
+RUN pnpm install
+
 RUN pnpm --filter api run build
 
 
