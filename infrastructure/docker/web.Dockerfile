@@ -2,13 +2,13 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-COPY package.json package-lock.json* ./
-RUN npm ci
+COPY package.json pnpm-workspace.yaml turbo.json ./
+RUN npm install -g pnpm && pnpm install
 
 COPY . .
 # We specify the Next.js telemetry disable
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN npm run build --workspace=apps/web
+RUN pnpm run build --workspace=apps/web
 
 # Stage 2: Production
 FROM node:20-alpine AS runner

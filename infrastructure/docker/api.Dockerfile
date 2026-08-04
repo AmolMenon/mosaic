@@ -4,12 +4,12 @@ WORKDIR /app
 # Install dependencies needed for node-gyp if required
 RUN apk add --no-cache python3 make g++
 
-COPY package.json package-lock.json* ./
-# Note: In a monorepo, we'd copy root lockfile and workspace config
-RUN npm ci
+COPY package.json pnpm-workspace.yaml turbo.json ./
+RUN npm install -g pnpm && pnpm install
 
 COPY . .
-RUN npm run build --workspace=apps/api
+RUN pnpm run build --workspace=apps/api
+
 
 # Stage 2: Production
 FROM node:20-alpine AS runner

@@ -2,12 +2,12 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
-COPY package.json package-lock.json* ./
-RUN npm ci
+COPY package.json pnpm-workspace.yaml turbo.json ./
+RUN npm install -g pnpm && pnpm install
 
 COPY . .
 # Assuming worker is part of the API workspace or a separate worker workspace
-RUN npm run build --workspace=apps/api
+RUN pnpm run build --workspace=apps/api
 
 # Stage 2: Production
 FROM node:20-alpine AS runner
