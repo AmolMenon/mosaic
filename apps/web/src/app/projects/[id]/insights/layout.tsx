@@ -1,6 +1,6 @@
 import React from "react";
 import { AppShell, Sidebar } from "@mosaic/ui";
-import { LeftPanel } from "../../../features/insights/LeftPanel";
+import { LeftPanel } from "../../../../features/insights/LeftPanel";
 
 export default function InsightsLayout({ children }: { children: React.ReactNode }) {
   return (

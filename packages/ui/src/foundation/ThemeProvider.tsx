@@ -1,3 +1,4 @@
+"use client";
 import React, { createContext, useContext, useEffect, useState } from "react";
 import "@mosaic/design-tokens/src/index.css"; // Enforces the token package loading
 
