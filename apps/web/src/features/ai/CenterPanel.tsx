@@ -38,13 +38,13 @@ export function CenterPanel() {
                 <div>
                   <div className="text-[10px] text-text-tertiary uppercase font-mono mb-2">Steps Executed</div>
                   <ul className="text-sm text-text-secondary space-y-1.5 list-disc pl-4">
-                    {assignment.plan.estimatedSteps.map((step, i) => <li key={i}>{step}</li>)}
+                    {assignment.plan.estimatedSteps.map((step: string, i: number) => <li key={i}>{step}</li>)}
                   </ul>
                 </div>
                 <div>
                   <div className="text-[10px] text-text-tertiary uppercase font-mono mb-2">Generated Outputs</div>
                   <ul className="text-sm text-text-secondary space-y-1.5 list-disc pl-4">
-                    {assignment.plan.expectedOutputs.map((out, i) => <li key={i}>{out}</li>)}
+                    {assignment.plan.expectedOutputs.map((out: string, i: number) => <li key={i}>{out}</li>)}
                   </ul>
                 </div>
               </div>
@@ -58,14 +58,14 @@ export function CenterPanel() {
               <span className="text-xs font-normal text-text-tertiary">All AI proposals require explicit human approval.</span>
             </h2>
 
-            {assignment.deliverables.map(deliverable => (
+            {assignment.deliverables.map((deliverable: any) => (
               <div key={deliverable.id} className="mb-8">
                 <div className="text-sm font-semibold text-text-primary mb-4 border-b border-border-subtle pb-2">
                   {deliverable.type}: {deliverable.title}
                 </div>
 
                 <div className="space-y-4">
-                  {deliverable.proposals.map(proposal => {
+                  {deliverable.proposals.map((proposal: any) => {
                     const isActive = activeProposalId === proposal.id;
                     return (
                       <div 
