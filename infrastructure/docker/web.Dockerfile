@@ -8,7 +8,7 @@ RUN npm install -g pnpm && pnpm install
 COPY . .
 # We specify the Next.js telemetry disable
 ENV NEXT_TELEMETRY_DISABLED=1
-RUN pnpm run build --workspace=apps/web
+RUN pnpm --filter apps/web run build
 
 # Stage 2: Production
 FROM node:20-alpine AS runner

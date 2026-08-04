@@ -7,7 +7,7 @@ RUN npm install -g pnpm && pnpm install
 
 COPY . .
 # Assuming worker is part of the API workspace or a separate worker workspace
-RUN pnpm run build --workspace=apps/api
+RUN pnpm --filter apps/api run build
 
 # Stage 2: Production
 FROM node:20-alpine AS runner

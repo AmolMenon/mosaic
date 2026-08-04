@@ -8,7 +8,7 @@ COPY package.json pnpm-workspace.yaml turbo.json ./
 RUN npm install -g pnpm && pnpm install
 
 COPY . .
-RUN pnpm run build --workspace=apps/api
+RUN pnpm --filter apps/api run build
 
 
 # Stage 2: Production
