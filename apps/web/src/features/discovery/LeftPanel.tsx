@@ -1,18 +1,23 @@
 "use client";
 import React from "react";
 import { useDiscoveryStore } from "../../store/discovery";
-import { mockDiscoveryView, mockFollowNode } from "@mosaic/testing";
+import { useDiscovery } from "../../hooks/queries";
 import { clsx } from "clsx";
 
 export function LeftPanel() {
   const { activeViewId, setActiveView } = useDiscoveryStore();
+  const { data } = useDiscovery();
+  
+  if (!data) return null;
+  const mockDiscoveryView = data.discoveryView;
+  const mockFollowNode = data.followNode;
 
   const views = [mockDiscoveryView];
   const follows = [mockFollowNode]; // In a real app we'd hydrate this
 
   React.useEffect(() => {
     if (!activeViewId) setActiveView(mockDiscoveryView.id);
-  }, [activeViewId, setActiveView]);
+  }, [activeViewId, setActiveView, mockDiscoveryView.id]);
 
   return (
     <div className="p-4 h-full flex flex-col bg-bg-base overflow-y-auto">

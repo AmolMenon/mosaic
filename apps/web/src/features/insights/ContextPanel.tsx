@@ -1,10 +1,11 @@
 "use client";
 import React from "react";
 import { useInsightsStore } from "../../store/insights";
-import { mockInsightPricing } from "@mosaic/testing";
+import { useInsightsAll } from "../../hooks/queries";
 
 export function ContextPanel() {
   const { activeInsightId } = useInsightsStore();
+  const { data } = useInsightsAll();
 
   if (!activeInsightId) {
     return (
@@ -14,7 +15,8 @@ export function ContextPanel() {
     );
   }
 
-  const insight = mockInsightPricing;
+  const insight = data?.insightPricing;
+  if (!insight) return null;
 
   return (
     <div className="p-4 h-full bg-bg-surface border-l border-border-subtle flex flex-col">

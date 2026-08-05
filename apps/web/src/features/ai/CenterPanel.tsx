@@ -1,12 +1,17 @@
 "use client";
 import React from "react";
 import { useAiStore } from "../../store/ai";
-import { mockAssignmentChallengePricing } from "@mosaic/testing";
+import { useAI } from "../../hooks/queries";
 import { clsx } from "clsx";
 
 export function CenterPanel() {
   const { activeProposalId, setActiveProposal } = useAiStore();
-  const assignment = mockAssignmentChallengePricing;
+  const { data, isLoading } = useAI();
+  
+  if (isLoading) return <div className="flex-1 overflow-hidden bg-bg-base p-8">Loading AI tasks...</div>;
+  if (!data) return null;
+
+  const assignment = data.assignmentChallengePricing;
 
   return (
     <div className="flex flex-col h-full overflow-hidden bg-bg-base">

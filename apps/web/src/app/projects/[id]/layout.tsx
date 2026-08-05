@@ -3,13 +3,16 @@ import React, { useEffect } from "react";
 import { AppShell, Sidebar } from "@mosaic/ui";
 import { LeftPanel } from "../../../features/projects/LeftPanel";
 import { RightPanel } from "../../../features/projects/RightPanel";
-import { mockProjectLBO } from "@mosaic/testing";
+import { useProject } from "../../../hooks/queries";
 import { useEvidenceTrace } from "../../../store/evidence-trace";
 
-export default function ProjectLayout({ children }: { children: React.ReactNode }) {
-  const project = mockProjectLBO;
+export default function ProjectLayout({ children, params }: { children: React.ReactNode, params: { id: string } }) {
+  const { data: project, isLoading } = useProject(params.id);
   const setTraceActive = useEvidenceTrace((state) => state.setTraceActive);
   const isTraceActive = useEvidenceTrace((state) => state.isTraceActive);
+
+  if (isLoading) return <div className="flex h-screen w-full bg-bg-base items-center justify-center">Loading project...</div>;
+  if (!project) return <div className="flex h-screen w-full bg-bg-base items-center justify-center text-red-500">Project not found</div>;
 
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {

@@ -1,17 +1,21 @@
 "use client";
 import React from "react";
 import { useAiStore } from "../../store/ai";
-import { mockAssignmentChallengePricing } from "@mosaic/testing";
+import { useAI } from "../../hooks/queries";
 import { clsx } from "clsx";
 
 export function LeftPanel() {
   const { activeAssignmentId, setActiveAssignment } = useAiStore();
+  const { data } = useAI();
+
+  if (!data) return null;
+  const mockAssignmentChallengePricing = data.assignmentChallengePricing;
 
   const assignments = [mockAssignmentChallengePricing]; // Mock queue
 
   React.useEffect(() => {
     if (!activeAssignmentId) setActiveAssignment(mockAssignmentChallengePricing.id);
-  }, [activeAssignmentId, setActiveAssignment]);
+  }, [activeAssignmentId, setActiveAssignment, mockAssignmentChallengePricing.id]);
 
   return (
     <div className="p-4 h-full flex flex-col bg-bg-base overflow-y-auto">

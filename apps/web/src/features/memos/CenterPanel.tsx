@@ -1,12 +1,17 @@
 "use client";
 import React from "react";
 import { useMemoStore } from "../../store/memo";
-import { mockMemoApolloIC } from "@mosaic/testing";
+import { useMemos } from "../../hooks/queries";
 import { clsx } from "clsx";
 
 export function CenterPanel() {
   const { activeBlockId, setActiveBlock, heatmapEnabled, setHeatmapEnabled } = useMemoStore();
-  const memo = mockMemoApolloIC;
+  const { data, isLoading } = useMemos();
+
+  if (isLoading) return <div className="flex-1 overflow-hidden bg-[#F9FAFB] flex items-center justify-center">Loading memo...</div>;
+  if (!data) return null;
+
+  const memo = data.memoApolloIC;
 
   return (
     <div className="flex flex-col h-full overflow-hidden bg-[#F9FAFB] relative">

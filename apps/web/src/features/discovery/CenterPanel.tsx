@@ -1,14 +1,18 @@
 "use client";
 import React from "react";
 import { useDiscoveryStore } from "../../store/discovery";
-import { mockDiscoveryView, mockDiscoveryResultPrinciple } from "@mosaic/testing";
+import { useDiscovery } from "../../hooks/queries";
 import { clsx } from "clsx";
 
 export function CenterPanel() {
   const { searchQuery, setSearchQuery, activeResultId, setActiveResult } = useDiscoveryStore();
+  const { data, isLoading } = useDiscovery();
   
-  const view = mockDiscoveryView;
-  const results = [mockDiscoveryResultPrinciple]; // Mock feed
+  if (isLoading) return <div className="flex-1 overflow-hidden bg-bg-base p-8">Loading...</div>;
+  if (!data) return null;
+
+  const view = data.discoveryView;
+  const results = [data.discoveryResultPrinciple]; // Mock feed
 
   return (
     <div className="flex flex-col h-full overflow-hidden bg-bg-base">

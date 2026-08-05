@@ -1,13 +1,18 @@
 "use client";
 import React from "react";
 import { useIngestionStore } from "../../store/ingestion";
-import { mockPipelineTranscript } from "@mosaic/testing";
+import { useIngestion } from "../../hooks/queries";
 import { clsx } from "clsx";
 import { Play, RotateCcw, SkipForward } from "lucide-react";
 
 export function CenterPanel() {
   const { activeStageId, setActiveStage } = useIngestionStore();
-  const pipeline = mockPipelineTranscript;
+  const { data, isLoading } = useIngestion();
+
+  if (isLoading) return <div className="flex-1 overflow-hidden bg-bg-base p-8 text-text-tertiary">Loading pipeline...</div>;
+  if (!data) return null;
+
+  const { pipelineTranscript: pipeline } = data;
 
   return (
     <div className="flex flex-col h-full overflow-hidden bg-bg-base">

@@ -1,10 +1,11 @@
 "use client";
 import React from "react";
 import { useQuestionsStore } from "../../store/questions";
-import { mockHypothesisPremium } from "@mosaic/testing";
+import { useQuestions } from "../../hooks/queries";
 
 export function ContextPanel() {
   const { activeQuestionId } = useQuestionsStore();
+  const { data } = useQuestions();
 
   if (!activeQuestionId) {
     return (
@@ -13,6 +14,9 @@ export function ContextPanel() {
       </div>
     );
   }
+
+  if (!data) return null;
+  const mockHypothesisPremium = data.hypothesisPremium;
 
   return (
     <div className="p-4 h-full bg-bg-surface border-l border-border-subtle flex flex-col">

@@ -1,12 +1,22 @@
 "use client";
 import React from "react";
 import { useKnowledgeStore } from "../../store/knowledge";
-import { mockKnowledgeAssetPricing, mockTaxonomyRoot, mockTaxonomyPricing, mockTaxonomyPremiumization, mockTaxonomyElasticity } from "@mosaic/testing";
+import { useKnowledge } from "../../hooks/queries";
 import { clsx } from "clsx";
 import { KnowledgeAsset, TaxonomyNode } from "@mosaic/contracts";
 
 export function LeftPanel() {
   const { activeAssetId, setActiveAsset, activeTaxonomyId, setActiveTaxonomy } = useKnowledgeStore();
+  const { data } = useKnowledge();
+
+  if (!data) return null;
+  const { 
+    knowledgeAssetPricing: mockKnowledgeAssetPricing, 
+    taxonomyRoot: mockTaxonomyRoot, 
+    taxonomyPricing: mockTaxonomyPricing, 
+    taxonomyPremiumization: mockTaxonomyPremiumization, 
+    taxonomyElasticity: mockTaxonomyElasticity 
+  } = data;
 
   const taxonomyNodes = [mockTaxonomyRoot, mockTaxonomyPricing, mockTaxonomyPremiumization, mockTaxonomyElasticity];
   const assets = [mockKnowledgeAssetPricing];
@@ -14,7 +24,7 @@ export function LeftPanel() {
   React.useEffect(() => {
     if (!activeAssetId) setActiveAsset(mockKnowledgeAssetPricing.id);
     if (!activeTaxonomyId) setActiveTaxonomy(mockTaxonomyElasticity.id);
-  }, [activeAssetId, activeTaxonomyId, setActiveAsset, setActiveTaxonomy]);
+  }, [activeAssetId, activeTaxonomyId, setActiveAsset, setActiveTaxonomy, mockKnowledgeAssetPricing.id, mockTaxonomyElasticity.id]);
 
   const renderTaxonomyTree = (node: TaxonomyNode, depth = 0) => {
     const isActive = activeTaxonomyId === node.id;

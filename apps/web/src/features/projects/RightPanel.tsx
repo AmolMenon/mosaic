@@ -2,14 +2,18 @@
 import React from "react";
 import { Project } from "@mosaic/contracts";
 import { useEvidenceTrace } from "../../store/evidence-trace";
-import { mockEvidence1, mockEvidence2, mockLink1, mockLink2 } from "@mosaic/testing";
 import { EvidenceCard } from "@mosaic/ui";
+import { useInsights } from "../../hooks/queries";
 
 export function RightPanel({ project }: { project: Project }) {
   const { isTraceActive, selectionMap } = useEvidenceTrace();
+  const { data: insightsData } = useInsights(project.id);
 
   // If trace is active, Right panel becomes the Evidence Inspector
   if (isTraceActive) {
+    const evidenceList = insightsData?.evidence || [];
+    const linksList = insightsData?.links || [];
+
     return (
       <div className="p-4 h-full bg-bg-surface border-l border-border-subtle flex flex-col transition-colors duration-150">
         <div className="flex items-center gap-2 mb-4">
@@ -19,11 +23,15 @@ export function RightPanel({ project }: { project: Project }) {
         
         <div className="flex-1 overflow-y-auto space-y-4">
           <div className="text-xs text-text-secondary mb-2">Source Document Mapping</div>
-          {/* We show the mocked evidence cards here to represent the connection */}
           <div className="relative">
-            <EvidenceCard evidence={mockEvidence1} link={mockLink1} isTraced={true} />
-            <div className="my-2 border-l-2 border-dashed border-border-subtle h-4 ml-4" />
-            <EvidenceCard evidence={mockEvidence2} link={mockLink2} isTraced={true} />
+            {evidenceList.map((ev: any, idx: number) => (
+              <React.Fragment key={idx}>
+                <EvidenceCard evidence={ev} link={linksList[idx]} isTraced={true} />
+                {idx < evidenceList.length - 1 && (
+                  <div className="my-2 border-l-2 border-dashed border-border-subtle h-4 ml-4" />
+                )}
+              </React.Fragment>
+            ))}
           </div>
         </div>
       </div>

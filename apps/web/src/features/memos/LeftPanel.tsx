@@ -1,13 +1,15 @@
 "use client";
 import React from "react";
 import { useMemoStore } from "../../store/memo";
-import { mockMemoApolloIC } from "@mosaic/testing";
+import { useMemos } from "../../hooks/queries";
 import { clsx } from "clsx";
 
 export function LeftPanel() {
   const { activeProfile, setActiveProfile } = useMemoStore();
+  const { data } = useMemos();
   
-  const memo = mockMemoApolloIC;
+  if (!data) return null;
+  const memo = data.memoApolloIC;
 
   return (
     <div className="p-4 h-full flex flex-col bg-bg-base overflow-y-auto">

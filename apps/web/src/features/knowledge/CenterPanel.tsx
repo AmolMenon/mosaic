@@ -1,14 +1,18 @@
 "use client";
 import React from "react";
 import { useKnowledgeStore } from "../../store/knowledge";
-import { mockKnowledgeAssetPricing, mockPrinciplePricingPower, mockChallengeHelios } from "@mosaic/testing";
+import { useKnowledge } from "../../hooks/queries";
 
 export function CenterPanel() {
   const { activeAssetId } = useKnowledgeStore();
+  const { data, isLoading } = useKnowledge();
 
-  const asset = mockKnowledgeAssetPricing; // We'd lookup by activeAssetId
-  const principle = mockPrinciplePricingPower;
-  const challenge = mockChallengeHelios;
+  if (isLoading) return <div className="flex-1 h-full flex items-center justify-center text-text-tertiary">Loading knowledge...</div>;
+  if (!data) return null;
+
+  const asset = data.knowledgeAssetPricing; // We'd lookup by activeAssetId
+  const principle = data.principlePricingPower;
+  const challenge = data.challengeHelios;
 
   if (!activeAssetId) {
     return (

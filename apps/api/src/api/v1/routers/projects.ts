@@ -3,17 +3,21 @@ import { requireAuth } from "../dependencies/auth";
 import { parsePagination } from "../dependencies/pagination";
 import { formatSuccessResponse } from "../dependencies/responses";
 import { ApiException } from "../schemas/errors/errors";
+import { mockProjectLBO } from "@mosaic/testing";
 
 export const projectsRouter = Router();
 
-// In a real app, this would be injected via constructor/DI framework
 const mockProjectService = {
   listProjects: async (limit: number, cursor?: string) => {
     return {
-      projects: [{ id: "proj_1", name: "Alpha" }],
+      projects: [mockProjectLBO],
       nextCursor: null,
       hasMore: false
     };
+  },
+  getProject: async (id: string) => {
+    if (id === mockProjectLBO.id || id === 'defaultProjectId') return mockProjectLBO;
+    throw new ApiException(404, "NOT_FOUND", "Project not found");
   },
   createProject: async (name: string) => {
     if (!name) throw new ApiException(400, "INVALID_INPUT", "Project name is required.");
@@ -29,6 +33,29 @@ projectsRouter.get("/", requireAuth, parsePagination, async (req: any, res: any,
     res.json(formatSuccessResponse(result.projects, {
       next_cursor: result.nextCursor,
       has_more: result.hasMore
+    }));
+  } catch (err) {
+    next(err);
+  }
+});
+
+projectsRouter.get("/:id", requireAuth, async (req: any, res: any, next: any) => {
+  try {
+    const project = await mockProjectService.getProject(req.params.id);
+    res.json(formatSuccessResponse(project));
+  } catch (err) {
+    next(err);
+  }
+});
+
+projectsRouter.get("/:id/insights", requireAuth, async (req: any, res: any, next: any) => {
+  try {
+    const { mockInsight1, mockClaim1, mockClaim2, mockEvidence1, mockEvidence2, mockLink1, mockLink2 } = require("@mosaic/testing");
+    res.json(formatSuccessResponse({
+      insight: mockInsight1,
+      claims: [mockClaim1, mockClaim2],
+      evidence: [mockEvidence1, mockEvidence2],
+      links: [mockLink1, mockLink2]
     }));
   } catch (err) {
     next(err);

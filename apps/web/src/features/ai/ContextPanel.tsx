@@ -1,10 +1,11 @@
 "use client";
 import React from "react";
 import { useAiStore } from "../../store/ai";
-import { mockHypothesisProposal } from "@mosaic/testing";
+import { useAI } from "../../hooks/queries";
 
 export function ContextPanel() {
   const { activeProposalId } = useAiStore();
+  const { data } = useAI();
 
   if (!activeProposalId) {
     return (
@@ -14,7 +15,8 @@ export function ContextPanel() {
     );
   }
 
-  const proposal = mockHypothesisProposal; // Mapped by ID in real app
+  if (!data) return null;
+  const proposal = data.hypothesisProposal; // Mapped by ID in real app
 
   return (
     <div className="p-4 h-full bg-bg-surface border-l border-border-subtle flex flex-col overflow-y-auto">

@@ -1,10 +1,11 @@
 "use client";
 import React from "react";
 import { useKnowledgeStore } from "../../store/knowledge";
-import { mockKnowledgeUsageApollo } from "@mosaic/testing";
+import { useKnowledge } from "../../hooks/queries";
 
 export function ContextPanel() {
   const { activeAssetId } = useKnowledgeStore();
+  const { data } = useKnowledge();
   
   if (!activeAssetId) {
     return (
@@ -14,7 +15,8 @@ export function ContextPanel() {
     );
   }
 
-  const usage = mockKnowledgeUsageApollo;
+  if (!data) return null;
+  const usage = data.knowledgeUsageApollo;
 
   return (
     <div className="p-4 h-full bg-bg-surface border-l border-border-subtle flex flex-col">

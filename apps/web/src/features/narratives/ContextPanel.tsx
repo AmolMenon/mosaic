@@ -1,10 +1,11 @@
 "use client";
 import React from "react";
 import { useNarrativeStore } from "../../store/narrative";
-import { mockInsightPricing } from "@mosaic/testing";
+import { useNarratives } from "../../hooks/queries";
 
 export function ContextPanel() {
   const { activeArgumentBlockId } = useNarrativeStore();
+  const { data: narrativesData } = useNarratives();
 
   if (!activeArgumentBlockId) {
     return (
@@ -14,7 +15,9 @@ export function ContextPanel() {
     );
   }
 
-  const insight = mockInsightPricing; // In reality, we'd lookup the insights linked to the block
+  const insight = narrativesData?.insightPricing; // In reality, we'd lookup the insights linked to the block
+
+  if (!insight) return null;
 
   return (
     <div className="p-4 h-full bg-bg-surface border-l border-border-subtle flex flex-col">

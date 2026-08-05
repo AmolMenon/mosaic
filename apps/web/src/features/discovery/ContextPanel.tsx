@@ -1,10 +1,11 @@
 "use client";
 import React from "react";
 import { useDiscoveryStore } from "../../store/discovery";
-import { mockDiscoveryResultPrinciple, mockPricingEvolution } from "@mosaic/testing";
+import { useDiscovery } from "../../hooks/queries";
 
 export function ContextPanel() {
   const { activeResultId } = useDiscoveryStore();
+  const { data } = useDiscovery();
 
   if (!activeResultId) {
     return (
@@ -14,7 +15,8 @@ export function ContextPanel() {
     );
   }
 
-  const evo = mockPricingEvolution;
+  if (!data) return null;
+  const evo = data.pricingEvolution;
 
   return (
     <div className="p-4 h-full bg-bg-surface border-l border-border-subtle flex flex-col">

@@ -1,10 +1,11 @@
 "use client";
 import React from "react";
 import { useIngestionStore } from "../../store/ingestion";
-import { mockPipelineTranscript } from "@mosaic/testing";
+import { useIngestion } from "../../hooks/queries";
 
 export function ContextPanel() {
   const { activeStageId } = useIngestionStore();
+  const { data } = useIngestion();
 
   if (!activeStageId) {
     return (
@@ -14,7 +15,9 @@ export function ContextPanel() {
     );
   }
 
-  const stage = mockPipelineTranscript.stages.find(s => s.id === activeStageId);
+  if (!data) return null;
+  const mockPipelineTranscript = data.pipelineTranscript;
+  const stage = mockPipelineTranscript.stages.find((s: any) => s.id === activeStageId);
   if (!stage) return null;
 
   return (

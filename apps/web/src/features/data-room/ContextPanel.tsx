@@ -2,10 +2,12 @@
 import React from "react";
 import { useDataRoomStore } from "../../store/data-room";
 import { EvidenceCard } from "@mosaic/ui";
-import { mockEvidence2, mockLink2 } from "@mosaic/testing";
+import { useInsights } from "../../hooks/queries";
 
 export function ContextPanel() {
   const { context } = useDataRoomStore();
+  const projectId = 'defaultProjectId';
+  const { data: insightsData } = useInsights(projectId);
 
   if (!context.documentId) {
     return (
@@ -15,6 +17,9 @@ export function ContextPanel() {
     );
   }
 
+  const evidence = insightsData?.evidence?.[1];
+  const link = insightsData?.links?.[1];
+
   return (
     <div className="p-4 h-full bg-bg-surface border-l border-border-subtle flex flex-col">
       <div className="text-xs text-text-tertiary font-mono uppercase tracking-wider mb-6">Context Panel</div>
@@ -22,7 +27,7 @@ export function ContextPanel() {
       {context.readingMode === 'evidence' && (
         <div className="space-y-4">
           <div className="text-xs font-semibold text-text-secondary">Evidence on Page 1</div>
-          <EvidenceCard evidence={mockEvidence2} link={mockLink2} />
+          {evidence && link && <EvidenceCard evidence={evidence} link={link} />}
         </div>
       )}
 

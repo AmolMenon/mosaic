@@ -1,13 +1,19 @@
 "use client";
 import React from "react";
 import { useNarrativeStore } from "../../store/narrative";
-import { mockNarrative, mockPricingSection, mockInsightPricing } from "@mosaic/testing";
+import { useNarratives } from "../../hooks/queries";
 import { clsx } from "clsx";
 
 export function CenterPanel() {
   const { activeSectionId, activeArgumentBlockId, setActiveArgumentBlock } = useNarrativeStore();
+  const { data: narrativesData, isLoading } = useNarratives();
 
-  const section = mockNarrative.flow.sections.find(s => s.id === activeSectionId) || mockPricingSection;
+  if (isLoading) return <div className="p-8 text-text-tertiary animate-pulse">Loading narratives...</div>;
+  if (!narrativesData) return null;
+
+  const { narrative: mockNarrative, pricingSection: mockPricingSection, insightPricing: mockInsightPricing } = narrativesData;
+
+  const section = mockNarrative.flow.sections.find((s: any) => s.id === activeSectionId) || mockPricingSection;
 
   return (
     <div className="flex flex-col h-full overflow-y-auto bg-bg-base p-8">

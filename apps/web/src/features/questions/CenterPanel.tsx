@@ -1,13 +1,17 @@
 "use client";
 import React from "react";
 import { useQuestionsStore } from "../../store/questions";
-import { mockQuestionPricing, mockHypothesisPremium, mockHypothesisVulnerable, mockEvidence1, mockEvidence2 } from "@mosaic/testing";
+import { useQuestions } from "../../hooks/queries";
 import { clsx } from "clsx";
 
 export function CenterPanel() {
   const { activeQuestionId } = useQuestionsStore();
+  const { data, isLoading } = useQuestions();
 
-  if (activeQuestionId !== mockQuestionPricing.id) {
+  if (isLoading) return <div className="flex-1 h-full flex items-center justify-center text-text-tertiary">Loading question...</div>;
+  if (!data) return null;
+
+  if (activeQuestionId !== data.questionPricing.id) {
     return (
       <div className="flex-1 h-full flex items-center justify-center text-text-tertiary">
         Select a question to begin investigation.
@@ -15,7 +19,11 @@ export function CenterPanel() {
     );
   }
 
-  const q = mockQuestionPricing;
+  const q = data.questionPricing;
+  const mockHypothesisPremium = data.hypothesisPremium;
+  const mockHypothesisVulnerable = data.hypothesisVulnerable;
+  const mockEvidence1 = data.evidence1;
+  const mockEvidence2 = data.evidence2;
 
   return (
     <div className="flex flex-col h-full overflow-y-auto bg-bg-base p-8">

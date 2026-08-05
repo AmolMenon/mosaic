@@ -1,50 +1,25 @@
 services:
-  # Next.js Frontend
+  - type: web
+    name: mosaic-api
+    env: node
+    buildCommand: npm install -g pnpm && pnpm install && pnpm run build --filter=api
+    startCommand: cd apps/api && pnpm run start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 3001
+
   - type: web
     name: mosaic-web
-    env: docker
-    dockerfilePath: ./infrastructure/docker/web.Dockerfile
-    plan: starter
+    env: node
+    buildCommand: npm install -g pnpm && pnpm install && pnpm run build --filter=web
+    startCommand: cd apps/web && pnpm run start
     envVars:
-      - key: NEXT_PUBLIC_API_URL
+      - key: NODE_ENV
+        value: production
+      - key: API_URL
         fromService:
           type: web
           name: mosaic-api
-          envVarKey: RENDER_EXTERNAL_URL
-          
-  # Node.js API / Orchestrator
-  - type: web
-    name: mosaic-api
-    env: docker
-    dockerfilePath: ./infrastructure/docker/api.Dockerfile
-    plan: starter
-    healthCheckPath: /health
-    envVars:
-      - key: DATABASE_URL
-        fromDatabase:
-          name: mosaic-db
-          property: connectionString
-      - key: REDIS_URL
-        fromService:
-          type: pserv
-          name: mosaic-redis
           envVarKey: RENDER_INTERNAL_URL
-      # Secrets to be filled in the Render Dashboard:
-      - key: GEMINI_API_KEY
-        sync: false
-      - key: JWT_SECRET
-        sync: false
-
-  # Redis for Queueing / Cache
-  - type: pserv
-    name: mosaic-redis
-    env: docker
-    repo: https://github.com/render-examples/redis.git
-    plan: free
-
-databases:
-  # Managed PostgreSQL with pgvector support
-  - name: mosaic-db
-    databaseName: mosaic
-    user: mosaic_user
-    plan: starter

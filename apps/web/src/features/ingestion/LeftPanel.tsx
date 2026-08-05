@@ -1,24 +1,50 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import { useIngestionStore } from "../../store/ingestion";
-import { mockPipelineTranscript } from "@mosaic/testing";
+import { useIngestion, useUploadDocument } from "../../hooks/queries";
 import { clsx } from "clsx";
 
 export function LeftPanel() {
   const { activePipelineId, setActivePipeline } = useIngestionStore();
+  const { data } = useIngestion();
+  const uploadDoc = useUploadDocument();
+  
+  const [localPipelines, setLocalPipelines] = useState<any[]>([]);
 
-  const pipelines = [mockPipelineTranscript]; // Mock queue
+  const pipelines = data ? [data.pipelineTranscript, ...localPipelines] : [...localPipelines]; // Mock queue
 
   React.useEffect(() => {
-    if (!activePipelineId) setActivePipeline(mockPipelineTranscript.id);
-  }, [activePipelineId, setActivePipeline]);
+    if (!activePipelineId && pipelines.length > 0) {
+      setActivePipeline(pipelines[0].id);
+    }
+  }, [activePipelineId, setActivePipeline, pipelines]);
+
+  const handleFileUpload = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files[0]) {
+      const file = e.target.files[0];
+      const formData = new FormData();
+      formData.append("document", file);
+      
+      uploadDoc.mutate(formData, {
+        onSuccess: (res) => {
+          if (res.pipeline) {
+            setLocalPipelines(prev => [res.pipeline, ...prev]);
+            setActivePipeline(res.pipeline.id);
+          }
+        }
+      });
+    }
+  };
 
   return (
     <div className="p-4 h-full flex flex-col bg-bg-base overflow-y-auto">
       <div className="mb-6">
         <div className="text-xs font-mono uppercase tracking-wider text-text-tertiary mb-3 flex items-center justify-between">
           <span>Ingestion Pipelines</span>
-          <button className="text-accent-primary hover:underline">Upload</button>
+          <label className={clsx("text-accent-primary hover:underline cursor-pointer", uploadDoc.isPending && "opacity-50 pointer-events-none")}>
+            {uploadDoc.isPending ? "Uploading..." : "Upload"}
+            <input type="file" className="hidden" accept=".pdf,.txt,.md" onChange={handleFileUpload} disabled={uploadDoc.isPending} />
+          </label>
         </div>
       </div>
 

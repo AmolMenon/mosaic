@@ -1,16 +1,18 @@
 "use client";
 import React from "react";
 import { useMemoStore } from "../../store/memo";
-import { mockMemoApolloIC, mockMemoBlockPrinciple, mockMemoBlockArgument } from "@mosaic/testing";
+import { useMemos } from "../../hooks/queries";
 
 export function ContextPanel() {
   const { activeBlockId } = useMemoStore();
+  const { data } = useMemos();
 
-  const memo = mockMemoApolloIC;
+  if (!data) return null;
+  const memo = data.memoApolloIC;
 
   // Mock lookup
-  const block = activeBlockId === mockMemoBlockPrinciple.id ? mockMemoBlockPrinciple 
-              : activeBlockId === mockMemoBlockArgument.id ? mockMemoBlockArgument 
+  const block = activeBlockId === data.memoBlockPrinciple.id ? data.memoBlockPrinciple 
+              : activeBlockId === data.memoBlockArgument.id ? data.memoBlockArgument 
               : null;
 
   if (!block) {

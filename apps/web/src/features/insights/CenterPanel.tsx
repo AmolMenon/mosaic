@@ -1,20 +1,23 @@
 "use client";
 import React from "react";
 import { useInsightsStore } from "../../store/insights";
-import { mockInsightPricing } from "@mosaic/testing";
+import { useInsightsAll } from "../../hooks/queries";
 
 export function CenterPanel() {
   const { activeInsightId } = useInsightsStore();
+  const { data, isLoading } = useInsightsAll();
 
-  if (activeInsightId !== mockInsightPricing.id) {
+  if (isLoading) return <div className="flex-1 h-full flex items-center justify-center text-text-tertiary">Loading insights...</div>;
+  if (!data) return null;
+  const { insightPricing: insight } = data;
+
+  if (activeInsightId !== insight.id) {
     return (
       <div className="flex-1 h-full flex items-center justify-center text-text-tertiary">
         Select an insight to view the reasoning canvas.
       </div>
     );
   }
-
-  const insight = mockInsightPricing;
 
   return (
     <div className="flex flex-col h-full overflow-y-auto bg-bg-base p-8">
