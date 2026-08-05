@@ -5,6 +5,8 @@ import "@mosaic/ui/styles/globals.css";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
+import { QueryProvider } from "../providers/QueryProvider";
+
 export const metadata: Metadata = {
   title: "Mosaic | The Evidence Layer",
   description: "Evidence intelligence for investment teams",
@@ -17,7 +19,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${outfit.variable}`}>
-      <body style={{ margin: 0, padding: 0 }}>{children}</body>
+      <body style={{ margin: 0, padding: 0 }}>
+        <QueryProvider>{children}</QueryProvider>
+      </body>
     </html>
   );
 }
