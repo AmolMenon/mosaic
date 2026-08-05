@@ -1,0 +1,219 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+// -----------------------------------------------------------------------------
+// Identity & Multi-Tenancy
+// -----------------------------------------------------------------------------
+
+model User {
+  id           String               @id @default(uuid())
+  email        String               @unique
+  passwordHash String
+  name         String?
+  createdAt    DateTime             @default(now())
+  updatedAt    DateTime             @updatedAt
+
+  memberships  OrganizationMember[]
+  sessions     Session[]
+  auditLogs    AuditLog[]
+  documents    Document[]           @relation("UserUploads")
+  ownedProjects Project[]           @relation("ProjectOwner")
+}
+
+model Organization {
+  id          String               @id @default(uuid())
+  name        String
+  createdAt   DateTime             @default(now())
+  updatedAt   DateTime             @updatedAt
+
+  members     OrganizationMember[]
+  invitations Invitation[]
+  auditLogs   AuditLog[]
+  projects    Project[]
+  documents   Document[]
+}
+
+enum Role {
+  Analyst
+  Associate
+  VP
+  Partner
+  Admin
+}
+
+model OrganizationMember {
+  id             String       @id @default(uuid())
+  user           User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId         String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  role           Role         @default(Analyst)
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  @@unique([userId, organizationId])
+}
+
+model Invitation {
+  id             String       @id @default(uuid())
+  email          String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  role           Role         @default(Analyst)
+  token          String       @unique
+  expiresAt      DateTime
+  createdAt      DateTime     @default(now())
+
+  @@unique([email, organizationId])
+}
+
+model Session {
+  id        String   @id @default(uuid())
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  userId    String
+  token     String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+}
+
+model AuditLog {
+  id             String       @id @default(uuid())
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  user           User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+  userId         String?
+  action         String
+  resource       String
+  metadata       Json?
+  createdAt      DateTime     @default(now())
+}
+
+// -----------------------------------------------------------------------------
+// Core Domain (Projects, Documents)
+// -----------------------------------------------------------------------------
+
+model Project {
+  id             String       @id @default(uuid())
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  name           String
+  targetCompany  String
+  industry       String
+  dealType       String
+  status         String
+  stage          String
+  owner          User         @relation("ProjectOwner", fields: [ownerId], references: [id])
+  ownerId        String
+  teamMembers    String[]     // Array of user emails for simplicity matching existing interface
+  description    String
+  priority       String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+  tags           String[]
+  progress       Int
+
+  documents      Document[]
+  executions     Execution[]
+  questions      ProjectQuestion[]
+}
+
+model ProjectQuestion {
+  id        String   @id @default(uuid())
+  project   Project  @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  projectId String
+  question  String
+  createdAt DateTime @default(now())
+}
+
+model Document {
+  id             String       @id @default(uuid())
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organizationId String
+  project        Project?     @relation(fields: [projectId], references: [id], onDelete: SetNull)
+  projectId      String?
+  s3Key          String
+  filename       String
+  mimetype       String
+  sizeBytes      Int
+  uploadedBy     User?        @relation("UserUploads", fields: [uploadedById], references: [id], onDelete: SetNull)
+  uploadedById   String?
+  createdAt      DateTime     @default(now())
+
+  executions     Execution[]
+  artifacts      PipelineArtifact[]
+}
+
+// -----------------------------------------------------------------------------
+// Execution Engine (Preserving existing schemas)
+// -----------------------------------------------------------------------------
+
+model Execution {
+  execution_id   String    @id @default(uuid()) // Maps to DbExecution.execution_id
+  project        Project   @relation(fields: [pipeline_id], references: [id], onDelete: Cascade)
+  pipeline_id    String    // Wait, in code it's pipeline_id but it means project_id maybe? We'll keep it as pipeline_id
+  document       Document  @relation(fields: [document_id], references: [id], onDelete: Cascade)
+  document_id    String
+  status         String
+  progress_state String
+  version        Int
+  started_at     DateTime  @default(now())
+  completed_at   DateTime?
+
+  artifacts      PipelineArtifact[]
+  checkpoints    Checkpoint[]
+  metrics        ExecutionMetric[]
+  proposals      Proposal[]
+}
+
+model PipelineArtifact {
+  artifact_id      String    @id @default(uuid())
+  execution        Execution @relation(fields: [execution_id], references: [execution_id], onDelete: Cascade)
+  execution_id     String
+  document         Document  @relation(fields: [document_id], references: [id], onDelete: Cascade)
+  document_id      String
+  artifact_type    String
+  payload          Json
+  producer_stage   String
+  provider_id      String
+  provider_version String
+  created_at       DateTime  @default(now())
+}
+
+model Checkpoint {
+  checkpoint_id    String    @id @default(uuid())
+  execution        Execution @relation(fields: [execution_id], references: [execution_id], onDelete: Cascade)
+  execution_id     String
+  stage_id         String
+  artifact_ids     String[]
+  metrics_snapshot Json
+  completed_stages String[]
+  created_at       DateTime  @default(now())
+}
+
+model ExecutionMetric {
+  metrics_id   Int       @id @default(autoincrement())
+  execution    Execution @relation(fields: [execution_id], references: [execution_id], onDelete: Cascade)
+  execution_id String
+  stage_id     String
+  provider_id  String
+  latency_ms   Int
+  token_usage  Int
+  created_at   DateTime  @default(now())
+}
+
+model Proposal {
+  proposal_id   String    @id @default(uuid())
+  execution     Execution @relation(fields: [execution_id], references: [execution_id], onDelete: Cascade)
+  execution_id  String
+  proposal_type String
+  payload       Json
+  created_at    DateTime  @default(now())
+}

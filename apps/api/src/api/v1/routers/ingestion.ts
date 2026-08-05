@@ -1,37 +1,22 @@
 import { Router } from "express";
 import { requireAuth } from "../dependencies/auth";
 import { formatSuccessResponse } from "../dependencies/responses";
-import { mockPipelineTranscript } from "@mosaic/testing";
-
+import { S3StorageProvider } from "../../../infrastructure/storage/S3StorageProvider";
+import { PrismaClient } from "@prisma/client";
 import multer from "multer";
-import fs from "fs";
-import path from "path";
 
-// Ensure uploads directory exists
-const uploadDir = path.join(process.cwd(), "uploads");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, uploadDir);
-  },
-  filename: function (req, file, cb) {
-    const uniqueSuffix = Date.now() + '-' + Math.round(Math.random() * 1E9);
-    cb(null, file.fieldname + '-' + uniqueSuffix + path.extname(file.originalname));
-  }
-});
-
-const upload = multer({ storage: storage });
+const storageProvider = new S3StorageProvider();
+const prisma = new PrismaClient();
+const upload = multer({ storage: multer.memoryStorage() });
 
 export const ingestionRouter = Router();
 
 ingestionRouter.get("/", requireAuth, async (req: any, res: any, next: any) => {
   try {
-    res.json(formatSuccessResponse({
-      pipelineTranscript: mockPipelineTranscript
-    }));
+    const documents = await prisma.document.findMany({
+      where: { organizationId: req.principal.organizationId }
+    });
+    res.json(formatSuccessResponse({ documents }));
   } catch (err) {
     next(err);
   }
@@ -43,18 +28,26 @@ ingestionRouter.post("/upload", requireAuth, upload.single("document"), async (r
       return res.status(400).json({ error: "No file uploaded" });
     }
     
-    // Create a mock pipeline response simulating the newly uploaded file
-    const newPipeline = {
-      ...mockPipelineTranscript,
-      id: `pipeline-${Date.now()}`,
-      documentId: req.file.originalname,
-      status: "running"
-    };
+    // Upload to S3
+    const prefix = `org_${req.principal.organizationId}/project_${req.body.projectId || 'default'}`;
+    const storedArtifact = await storageProvider.uploadArtifact(req.file.buffer, prefix);
+    
+    // Record in PostgreSQL
+    const document = await prisma.document.create({
+      data: {
+        organizationId: req.principal.organizationId,
+        projectId: req.body.projectId || null,
+        s3Key: storedArtifact.uri,
+        filename: req.file.originalname,
+        mimetype: req.file.mimetype,
+        sizeBytes: req.file.size,
+        uploadedById: req.principal.id
+      }
+    });
 
     res.json(formatSuccessResponse({
       message: "File uploaded successfully",
-      file: req.file,
-      pipeline: newPipeline
+      document: document
     }));
   } catch (err) {
     next(err);

@@ -6,10 +6,12 @@ import { RightPanel } from "../../../features/projects/RightPanel";
 import { useProject } from "../../../hooks/queries";
 import { useEvidenceTrace } from "../../../store/evidence-trace";
 
+import { useParams } from "next/navigation";
 import { ProjectSkeleton } from "../../../components/ProjectSkeleton";
 
-export default function ProjectLayout({ children, params }: { children: React.ReactNode, params: Promise<{ id: string }> }) {
-  const { id } = React.use(params);
+export default function ProjectLayout({ children }: { children: React.ReactNode }) {
+  const params = useParams();
+  const id = params?.id as string;
   const { data: project, isLoading } = useProject(id);
   const setTraceActive = useEvidenceTrace((state) => state.setTraceActive);
   const isTraceActive = useEvidenceTrace((state) => state.isTraceActive);

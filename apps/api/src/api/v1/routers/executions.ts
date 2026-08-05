@@ -2,25 +2,29 @@ import { Router } from "express";
 import { requireAuth } from "../dependencies/auth";
 import { formatSuccessResponse } from "../dependencies/responses";
 import { ApiException } from "../schemas/errors/errors";
+import { PrismaClient } from "@prisma/client";
+import { v4 as uuidv4 } from "uuid";
 
 export const executionsRouter = Router();
-
-const mockExecutionService = {
-  createExecution: async (projectId: string, documentId: string) => {
-    if (!projectId || !documentId) {
-      throw new ApiException(400, "INVALID_INPUT", "Project ID and Document ID are required.");
-    }
-    return { executionId: "exec_123", status: "PENDING" };
-  },
-  getStatus: async (executionId: string) => {
-    return { executionId, status: "RUNNING" };
-  }
-};
+const prisma = new PrismaClient();
 
 executionsRouter.post("/", requireAuth, async (req: any, res: any, next: any) => {
   try {
     const { projectId, documentId } = req.body;
-    const execution = await mockExecutionService.createExecution(projectId, documentId);
+    
+    if (!projectId || !documentId) {
+      throw new ApiException(400, "INVALID_INPUT", "Project ID and Document ID are required.");
+    }
+    
+    // In a real app we would check if project/doc exists and user has access
+    const execution = await prisma.execution.create({
+      data: {
+        projectId,
+        status: "PENDING",
+        context_snapshot: { documentId }
+      }
+    });
+    
     res.status(202).json(formatSuccessResponse(execution));
   } catch (err) {
     next(err);
@@ -29,8 +33,15 @@ executionsRouter.post("/", requireAuth, async (req: any, res: any, next: any) =>
 
 executionsRouter.get("/:id/status", requireAuth, async (req: any, res: any, next: any) => {
   try {
-    const status = await mockExecutionService.getStatus(req.params.id);
-    res.json(formatSuccessResponse(status));
+    const execution = await prisma.execution.findUnique({
+      where: { id: req.params.id }
+    });
+    
+    if (!execution) {
+      throw new ApiException(404, "NOT_FOUND", "Execution not found");
+    }
+    
+    res.json(formatSuccessResponse(execution));
   } catch (err) {
     next(err);
   }

@@ -3,41 +3,29 @@ import { requireAuth } from "../dependencies/auth";
 import { parsePagination } from "../dependencies/pagination";
 import { formatSuccessResponse } from "../dependencies/responses";
 import { ApiException } from "../schemas/errors/errors";
-import { mockProjectLBO } from "@mosaic/testing";
+import { PrismaClient } from "@prisma/client";
 
 export const projectsRouter = Router();
-
-let projectsStore: any[] = [mockProjectLBO];
-
-const mockProjectService = {
-  listProjects: async (limit: number, cursor?: string) => {
-    return {
-      projects: projectsStore,
-      nextCursor: null,
-      hasMore: false
-    };
-  },
-  getProject: async (id: string) => {
-    const proj = projectsStore.find(p => p.id === id);
-    if (proj || id === 'defaultProjectId') return proj || mockProjectLBO;
-    throw new ApiException(404, "NOT_FOUND", "Project not found");
-  },
-  createProject: async (name: string) => {
-    if (!name) throw new ApiException(400, "INVALID_INPUT", "Project name is required.");
-    const newProj = { ...mockProjectLBO, id: `proj_${Date.now()}`, name };
-    projectsStore.push(newProj);
-    return newProj;
-  }
-};
+const prisma = new PrismaClient();
 
 projectsRouter.get("/", requireAuth, parsePagination, async (req: any, res: any, next: any) => {
   try {
-    const { limit, cursor } = req.paginationParams;
-    const result = await mockProjectService.listProjects(limit, cursor);
+    const { limit } = req.paginationParams;
+    const organizationId = req.principal.organizationId;
     
-    res.json(formatSuccessResponse(result.projects, {
-      next_cursor: result.nextCursor,
-      has_more: result.hasMore
+    if (!organizationId) {
+      return res.json(formatSuccessResponse([], { next_cursor: null, has_more: false }));
+    }
+
+    const projects = await prisma.project.findMany({
+      where: { organizationId },
+      take: limit,
+      orderBy: { updatedAt: 'desc' }
+    });
+    
+    res.json(formatSuccessResponse(projects, {
+      next_cursor: null,
+      has_more: false
     }));
   } catch (err) {
     next(err);
@@ -46,7 +34,19 @@ projectsRouter.get("/", requireAuth, parsePagination, async (req: any, res: any,
 
 projectsRouter.get("/:id", requireAuth, async (req: any, res: any, next: any) => {
   try {
-    const project = await mockProjectService.getProject(req.params.id);
+    const project = await prisma.project.findUnique({
+      where: { id: req.params.id }
+    });
+    
+    if (!project) {
+      throw new ApiException(404, "NOT_FOUND", "Project not found");
+    }
+    
+    // Authorization check
+    if (project.organizationId !== req.principal.organizationId) {
+      throw new ApiException(403, "FORBIDDEN", "Not authorized to access this project");
+    }
+    
     res.json(formatSuccessResponse(project));
   } catch (err) {
     next(err);
@@ -55,6 +55,7 @@ projectsRouter.get("/:id", requireAuth, async (req: any, res: any, next: any) =>
 
 projectsRouter.get("/:id/insights", requireAuth, async (req: any, res: any, next: any) => {
   try {
+    // Keep mock insights since insights are a separate domain
     const { mockInsight1, mockClaim1, mockClaim2, mockEvidence1, mockEvidence2, mockLink1, mockLink2 } = require("@mosaic/testing");
     res.json(formatSuccessResponse({
       insight: mockInsight1,
@@ -70,7 +71,26 @@ projectsRouter.get("/:id/insights", requireAuth, async (req: any, res: any, next
 projectsRouter.post("/", requireAuth, async (req: any, res: any, next: any) => {
   try {
     const { name } = req.body;
-    const project = await mockProjectService.createProject(name);
+    if (!name) throw new ApiException(400, "INVALID_INPUT", "Project name is required.");
+    
+    const project = await prisma.project.create({
+      data: {
+        name,
+        organizationId: req.principal.organizationId,
+        ownerId: req.principal.id,
+        targetCompany: "Unknown",
+        industry: "Unknown",
+        dealType: "Unknown",
+        status: "Active",
+        stage: "Research",
+        description: "",
+        priority: "Medium",
+        progress: 0,
+        teamMembers: [],
+        tags: []
+      }
+    });
+    
     res.status(201).json(formatSuccessResponse(project));
   } catch (err) {
     next(err);
