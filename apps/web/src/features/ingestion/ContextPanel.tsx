@@ -30,7 +30,7 @@ export function ContextPanel() {
         <div>
           <div className="text-xs font-semibold text-text-secondary mb-2">Input Artifact Types</div>
           <div className="flex flex-wrap gap-2 mb-4">
-            {stage.contract.inputArtifactTypes.map(type => (
+            {stage.contract.inputArtifactTypes.map((type: string) => (
               <span key={type} className="text-[10px] font-mono bg-bg-base border border-border-strong px-2 py-0.5 rounded text-text-secondary">
                 {type}
               </span>
@@ -40,8 +40,8 @@ export function ContextPanel() {
           {stage.inputArtifactIds.length > 0 && (
             <div className="space-y-2">
               <div className="text-[10px] uppercase text-text-tertiary font-bold tracking-wider">Consumed Artifacts</div>
-              {stage.inputArtifactIds.map(id => {
-                const art = mockPipelineTranscript.artifacts.find(a => a.id === id);
+              {stage.inputArtifactIds.map((id: string) => {
+                const art = mockPipelineTranscript.artifacts.find((a: any) => a.id === id);
                 return art && (
                   <div key={id} className="p-2 border border-border-subtle rounded bg-bg-base">
                     <div className="flex justify-between items-center mb-1">
@@ -62,7 +62,7 @@ export function ContextPanel() {
         <div className="pt-4 border-t border-border-subtle">
           <div className="text-xs font-semibold text-text-secondary mb-2">Output Artifact Types</div>
           <div className="flex flex-wrap gap-2 mb-4">
-            {stage.contract.outputArtifactTypes.map(type => (
+            {stage.contract.outputArtifactTypes.map((type: string) => (
               <span key={type} className="text-[10px] font-mono bg-bg-base border border-border-strong px-2 py-0.5 rounded text-text-secondary">
                 {type}
               </span>
@@ -72,8 +72,8 @@ export function ContextPanel() {
           {stage.outputArtifactIds.length > 0 && (
             <div className="space-y-2">
               <div className="text-[10px] uppercase text-text-tertiary font-bold tracking-wider">Produced Artifacts</div>
-              {stage.outputArtifactIds.map(id => {
-                const art = mockPipelineTranscript.artifacts.find(a => a.id === id);
+              {stage.outputArtifactIds.map((id: string) => {
+                const art = mockPipelineTranscript.artifacts.find((a: any) => a.id === id);
                 return art && (
                   <div key={id} className="p-2 border border-border-subtle rounded bg-bg-base cursor-pointer hover:border-accent-primary transition-colors">
                     <div className="flex justify-between items-center mb-2">

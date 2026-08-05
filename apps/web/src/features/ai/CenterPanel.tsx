@@ -93,7 +93,7 @@ export function CenterPanel() {
 
                         {/* Rendering the Proposed Object */}
                         <div className="p-4 bg-bg-surface border border-border-strong rounded mb-4 font-serif text-lg leading-relaxed text-text-primary">
-                          "{proposal.targetObject.statement}"
+                          &quot;{proposal.targetObject.statement}&quot;
                         </div>
 
                         {/* Inline Actions */}

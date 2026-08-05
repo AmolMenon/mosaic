@@ -49,7 +49,7 @@ export function LeftPanel() {
       <div>
         <div className="text-xs font-mono uppercase tracking-wider text-text-tertiary mb-3">Document Outline</div>
         <div className="space-y-1 pl-2 border-l border-border-subtle ml-1 text-sm text-text-secondary">
-          {memo.sections.map(section => (
+          {memo.sections.map((section: any) => (
             <div key={section.id} className="cursor-pointer hover:text-text-primary transition-colors py-1">
               {section.title}
             </div>

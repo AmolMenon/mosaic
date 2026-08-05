@@ -43,7 +43,7 @@ export function ContextPanel() {
         <div>
           <div className="text-xs font-semibold text-text-secondary mb-3">Review Notes</div>
           <div className="p-3 border border-border-subtle rounded bg-bg-base text-xs text-text-secondary italic">
-            "{insight.ownership.reviewNotes}"
+            &quot;{insight.ownership.reviewNotes}&quot;
             <div className="mt-2 font-mono text-[10px] text-text-tertiary not-italic uppercase">
               - {insight.ownership.reviewerId}
             </div>

@@ -35,7 +35,7 @@ export function CenterPanel() {
         </div>
         
         <h1 className="text-3xl font-bold text-text-primary mb-6 leading-tight font-serif italic text-accent-primary bg-selection-bg p-6 rounded-lg border-l-4 border-accent-primary">
-          "{insight.statement}"
+          &quot;{insight.statement}&quot;
         </h1>
         
         {/* Analyst Commentary */}
@@ -58,7 +58,7 @@ export function CenterPanel() {
                 Supporting Evidence ({insight.validation.supportingEvidenceIds.length})
               </div>
               <div className="p-3 bg-bg-base border border-border-subtle rounded text-sm text-text-primary mb-2 shadow-sm">
-                "Q3 enterprise revenue grew by 15% year-over-year, driven primarily by expansion in the APAC region."
+                &quot;Q3 enterprise revenue grew by 15% year-over-year, driven primarily by expansion in the APAC region.&quot;
               </div>
             </div>
 
@@ -78,7 +78,7 @@ export function CenterPanel() {
                 Contradicting Evidence ({insight.validation.contradictingEvidenceIds.length})
               </div>
               <div className="p-3 bg-bg-base border border-border-subtle rounded text-sm text-text-primary shadow-sm">
-                "Management expects enterprise churn to increase to 8% due to macro headwinds."
+                &quot;Management expects enterprise churn to increase to 8% due to macro headwinds.&quot;
               </div>
             </div>
 

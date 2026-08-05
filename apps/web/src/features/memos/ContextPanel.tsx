@@ -48,7 +48,7 @@ export function ContextPanel() {
           </div>
           
           <div className="text-xs text-text-secondary bg-bg-base p-2 border border-border-subtle rounded italic">
-            "The renderer applied the 'Investment Committee' profile to generate the current paragraph."
+            &quot;The renderer applied the &apos;Investment Committee&apos; profile to generate the current paragraph.&quot;
           </div>
         </div>
 
@@ -75,12 +75,12 @@ export function ContextPanel() {
           </div>
 
           <div className="space-y-2">
-            {memo.currentVersion.knowledgeDiffFromPrevious?.addedInsights.map(id => (
+            {memo.currentVersion.knowledgeDiffFromPrevious?.addedInsights.map((id: string) => (
               <div key={id} className="text-xs bg-accent-success/10 text-accent-success p-1.5 rounded border border-accent-success/20">
                 + Insight Added: {id}
               </div>
             ))}
-            {memo.currentVersion.knowledgeDiffFromPrevious?.changedRisks.map(id => (
+            {memo.currentVersion.knowledgeDiffFromPrevious?.changedRisks.map((id: string) => (
               <div key={id} className="text-xs bg-accent-warning/10 text-accent-warning p-1.5 rounded border border-accent-warning/20">
                 ~ Risk Changed: {id}
               </div>

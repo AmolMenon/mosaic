@@ -8,16 +8,16 @@ export function LeftPanel() {
   const { activeViewId, setActiveView } = useDiscoveryStore();
   const { data } = useDiscovery();
   
+  React.useEffect(() => {
+    if (data && !activeViewId) setActiveView(data.discoveryView.id);
+  }, [activeViewId, setActiveView, data]);
+
   if (!data) return null;
   const mockDiscoveryView = data.discoveryView;
   const mockFollowNode = data.followNode;
 
   const views = [mockDiscoveryView];
   const follows = [mockFollowNode]; // In a real app we'd hydrate this
-
-  React.useEffect(() => {
-    if (!activeViewId) setActiveView(mockDiscoveryView.id);
-  }, [activeViewId, setActiveView, mockDiscoveryView.id]);
 
   return (
     <div className="p-4 h-full flex flex-col bg-bg-base overflow-y-auto">

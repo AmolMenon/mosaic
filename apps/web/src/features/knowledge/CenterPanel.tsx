@@ -45,7 +45,7 @@ export function CenterPanel() {
         <div className="col-span-2 p-6 bg-selection-bg border-l-4 border-accent-primary rounded-r-lg">
           <div className="text-xs font-mono uppercase tracking-wider text-text-tertiary mb-3">Core Principle</div>
           <div className="text-lg font-serif italic text-text-primary leading-relaxed">
-            "{principle.statement}"
+            &quot;{principle.statement}&quot;
           </div>
         </div>
 
@@ -116,7 +116,7 @@ export function CenterPanel() {
           <div className="mb-4">
             <div className="text-xs text-text-secondary mb-1">During Project Helios:</div>
             <div className="text-sm italic text-text-primary border-l-2 border-accent-warning/50 pl-3 py-1">
-              "Helios data showed Mid-Market churn actually accelerates at 6% during high interest rate environments."
+              &quot;Helios data showed Mid-Market churn actually accelerates at 6% during high interest rate environments.&quot;
             </div>
           </div>
 

@@ -16,9 +16,6 @@ export default function ProjectLayout({ children }: { children: React.ReactNode 
   const setTraceActive = useEvidenceTrace((state) => state.setTraceActive);
   const isTraceActive = useEvidenceTrace((state) => state.isTraceActive);
 
-  if (isLoading) return <ProjectSkeleton />;
-  if (!project) return <div className="flex h-screen w-full bg-bg-base items-center justify-center text-red-500">Project not found</div>;
-
   useEffect(() => {
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Alt') setTraceActive(true);
@@ -35,6 +32,9 @@ export default function ProjectLayout({ children }: { children: React.ReactNode 
       window.removeEventListener('keyup', handleKeyUp);
     };
   }, [setTraceActive]);
+
+  if (isLoading) return <ProjectSkeleton />;
+  if (!project) return <div className="flex h-screen w-full bg-bg-base items-center justify-center text-red-500">Project not found</div>;
 
   return (
     <AppShell 

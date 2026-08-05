@@ -11,7 +11,9 @@ export function LeftPanel() {
   
   const [localPipelines, setLocalPipelines] = useState<any[]>([]);
 
-  const pipelines = data ? [data.pipelineTranscript, ...localPipelines] : [...localPipelines]; // Mock queue
+  const pipelines = React.useMemo(() => {
+    return data ? [data.pipelineTranscript, ...localPipelines] : [...localPipelines]; // Mock queue
+  }, [data, localPipelines]);
 
   React.useEffect(() => {
     if (!activePipelineId && pipelines.length > 0) {

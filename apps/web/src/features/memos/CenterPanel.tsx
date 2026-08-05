@@ -42,12 +42,12 @@ export function CenterPanel() {
             Strictly Confidential
           </div>
 
-          {memo.sections.map(section => (
+          {memo.sections.map((section: any) => (
             <div key={section.id} className="mb-12">
               <h2 className="text-xl font-bold text-text-primary mb-6 font-sans">{section.order}. {section.title}</h2>
               
               <div className="space-y-4 text-[15px] leading-relaxed text-text-secondary">
-                {section.blocks.map(block => {
+                {section.blocks.map((block: any) => {
                   const isActive = activeBlockId === block.id;
                   
                   // Heatmap coloring logic

@@ -68,7 +68,7 @@ export function CenterPanel() {
 
               <div>
                 <div className="text-xs text-text-tertiary uppercase mb-2 font-mono">Assumptions</div>
-                {mockHypothesisPremium.assumptions.map(a => (
+                {mockHypothesisPremium.assumptions.map((a: any) => (
                   <div key={a.id} className="text-sm border-l-2 border-border-strong pl-3 py-1 mb-2 text-text-secondary">
                     {a.statement}
                   </div>
@@ -78,13 +78,13 @@ export function CenterPanel() {
               <div>
                 <div className="text-xs text-text-tertiary uppercase mb-2 font-mono text-accent-success">Supporting Evidence (2)</div>
                 <div className="p-3 bg-bg-base border border-border-subtle rounded text-sm mb-2 shadow-sm">
-                  "{mockEvidence1.text}"
+                  &quot;{mockEvidence1.text}&quot;
                 </div>
               </div>
 
               <div>
                 <div className="text-xs text-text-tertiary uppercase mb-2 font-mono text-accent-danger">Counterarguments (1)</div>
-                {mockHypothesisPremium.counterarguments.map(c => (
+                {mockHypothesisPremium.counterarguments.map((c: any) => (
                   <div key={c.id} className="p-3 bg-bg-base border border-accent-danger/30 rounded text-sm">
                     <span className="font-semibold text-accent-danger text-xs uppercase mr-2">OPEN RISK</span>
                     {c.statement}

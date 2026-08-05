@@ -30,7 +30,7 @@ export function EvidenceCard({
   onLeave,
   onClick,
 }: EvidenceCardProps) {
-  const roleStyle = roleColors[link.role];
+  const roleStyle = roleColors[link.role as keyof typeof roleColors];
   const isDimmed = link.confidence === "low";
 
   return (

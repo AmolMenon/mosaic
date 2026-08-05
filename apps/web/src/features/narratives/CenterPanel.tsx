@@ -66,7 +66,7 @@ export function CenterPanel() {
             <div className="text-sm text-text-tertiary italic">No gaps identified.</div>
           ) : (
             <div className="space-y-2">
-              {section.gaps.map(g => (
+              {section.gaps.map((g: any) => (
                 <div key={g.id} className="p-2 border border-accent-danger/20 bg-accent-danger/5 rounded flex gap-2">
                   <span className="text-accent-danger text-xs mt-0.5">⚠️</span>
                   <span className="text-xs text-text-primary">{g.description}</span>
@@ -86,7 +86,7 @@ export function CenterPanel() {
         </h2>
         
         <div className="space-y-8 relative before:absolute before:left-4 before:top-2 before:bottom-2 before:w-[2px] before:bg-border-subtle">
-          {section.argumentBlocks.map((block, idx) => {
+          {section.argumentBlocks.map((block: any, idx: number) => {
             const isActive = activeArgumentBlockId === block.id;
             return (
               <div 
@@ -127,13 +127,13 @@ export function CenterPanel() {
                   
                   {/* Referenced Knowledge Assets */}
                   <div className="pt-3 border-t border-border-subtle flex flex-wrap gap-2">
-                    {block.supportingInsightIds.map(id => (
+                    {block.supportingInsightIds.map((id: string) => (
                       <div key={id} className="flex items-center gap-1.5 px-2 py-1 bg-bg-base border border-border-subtle rounded text-xs text-text-secondary shadow-sm">
                         <span className="text-accent-success">★</span>
                         <span className="truncate max-w-[200px]">{mockInsightPricing.statement}</span>
                       </div>
                     ))}
-                    {block.openRiskIds.map(id => (
+                    {block.openRiskIds.map((id: string) => (
                       <div key={id} className="flex items-center gap-1.5 px-2 py-1 bg-accent-danger/5 border border-accent-danger/20 rounded text-xs text-accent-danger shadow-sm">
                         <span>⚠️ Open Risk</span>
                       </div>
@@ -144,7 +144,7 @@ export function CenterPanel() {
                   {block.transition && (
                     <div className="mt-4 pt-3 border-t border-border-subtle border-dashed">
                       <div className="text-[10px] font-mono text-text-tertiary uppercase mb-1">Transition to next block</div>
-                      <div className="text-sm text-text-secondary italic">"{block.transition}"</div>
+                      <div className="text-sm text-text-secondary italic">&quot;{block.transition}&quot;</div>
                     </div>
                   )}
                 </div>

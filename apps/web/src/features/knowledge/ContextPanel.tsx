@@ -39,7 +39,7 @@ export function ContextPanel() {
           <div className="p-3 border border-border-subtle bg-bg-base rounded-md hover:bg-bg-surface-hover cursor-pointer transition-colors">
             <div className="text-[10px] text-accent-success uppercase font-bold mb-1">Validated Insight</div>
             <div className="text-xs text-text-primary line-clamp-3">
-              "The 15% price premium is sustainable within the Enterprise segment due to SOC2 compliance, but creates high vulnerability to Apex in the Mid-Market."
+              &quot;The 15% price premium is sustainable within the Enterprise segment due to SOC2 compliance, but creates high vulnerability to Apex in the Mid-Market.&quot;
             </div>
           </div>
         </div>

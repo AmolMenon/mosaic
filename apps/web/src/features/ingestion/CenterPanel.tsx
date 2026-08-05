@@ -43,7 +43,7 @@ export function CenterPanel() {
           <div className="text-lg font-bold text-text-primary mb-4">Workflow Execution</div>
           
           <div className="space-y-4">
-            {pipeline.stages.map((stage, idx) => {
+            {pipeline.stages.map((stage: any, idx: number) => {
               const isActive = activeStageId === stage.id;
               
               const statusColors = {
@@ -90,7 +90,7 @@ export function CenterPanel() {
                       {stage.qualityGates.length > 0 && (
                         <div className="mb-4">
                           <div className="text-xs font-mono uppercase tracking-wider text-text-secondary mb-2">Quality Gates</div>
-                          {stage.qualityGates.map((gate, i) => (
+                          {stage.qualityGates.map((gate: any, i: number) => (
                             <div key={i} className="flex items-center justify-between text-xs p-2 rounded bg-bg-surface border border-border-subtle mb-1">
                               <span className="font-medium text-text-primary">{gate.metric}</span>
                               <div className="flex items-center gap-4">
@@ -108,7 +108,7 @@ export function CenterPanel() {
                       <div className="mb-4">
                         <div className="text-xs font-mono uppercase tracking-wider text-text-secondary mb-2">Stage Logs</div>
                         <div className="bg-bg-surface font-mono text-[10px] p-3 rounded border border-border-subtle space-y-1 overflow-x-auto">
-                          {stage.logs.map((log, i) => (
+                          {stage.logs.map((log: any, i: number) => (
                             <div key={i} className={clsx(
                               "flex gap-3",
                               log.level === 'error' ? "text-accent-danger" : log.level === 'warn' ? "text-accent-warning" : "text-text-secondary"

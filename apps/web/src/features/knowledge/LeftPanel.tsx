@@ -9,6 +9,13 @@ export function LeftPanel() {
   const { activeAssetId, setActiveAsset, activeTaxonomyId, setActiveTaxonomy } = useKnowledgeStore();
   const { data } = useKnowledge();
 
+  React.useEffect(() => {
+    if (data) {
+      if (!activeAssetId) setActiveAsset(data.knowledgeAssetPricing.id);
+      if (!activeTaxonomyId) setActiveTaxonomy(data.taxonomyElasticity.id);
+    }
+  }, [activeAssetId, activeTaxonomyId, setActiveAsset, setActiveTaxonomy, data]);
+
   if (!data) return null;
   const { 
     knowledgeAssetPricing: mockKnowledgeAssetPricing, 
@@ -20,11 +27,6 @@ export function LeftPanel() {
 
   const taxonomyNodes = [mockTaxonomyRoot, mockTaxonomyPricing, mockTaxonomyPremiumization, mockTaxonomyElasticity];
   const assets = [mockKnowledgeAssetPricing];
-
-  React.useEffect(() => {
-    if (!activeAssetId) setActiveAsset(mockKnowledgeAssetPricing.id);
-    if (!activeTaxonomyId) setActiveTaxonomy(mockTaxonomyElasticity.id);
-  }, [activeAssetId, activeTaxonomyId, setActiveAsset, setActiveTaxonomy, mockKnowledgeAssetPricing.id, mockTaxonomyElasticity.id]);
 
   const renderTaxonomyTree = (node: TaxonomyNode, depth = 0) => {
     const isActive = activeTaxonomyId === node.id;

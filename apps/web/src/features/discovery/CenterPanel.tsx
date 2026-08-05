@@ -74,13 +74,13 @@ export function CenterPanel() {
                   <div className="p-4 bg-bg-base border border-border-subtle rounded-md text-sm">
                     <div className="text-[10px] font-mono text-accent-success uppercase tracking-wider mb-2">Explainable Discovery</div>
                     <div className="font-semibold text-text-primary mb-1">
-                      Matched: <span className="bg-selection-bg px-1 rounded">"{result.explanation.matchedTerm}"</span>
+                      Matched: <span className="bg-selection-bg px-1 rounded">&quot;{result.explanation.matchedTerm}&quot;</span>
                     </div>
                     <div className="text-text-secondary mb-3">{result.explanation.matchReason}</div>
                     
                     <div className="text-[10px] font-mono text-text-tertiary uppercase mb-1">Knowledge Path Traversed</div>
                     <div className="flex items-center gap-2 text-xs text-text-secondary">
-                      {result.explanation.traversedRelationships[0].split('->').map((step, idx, arr) => (
+                      {result.explanation.traversedRelationships[0].split('->').map((step: string, idx: number, arr: string[]) => (
                         <React.Fragment key={idx}>
                           <span className="bg-bg-surface px-1.5 py-0.5 rounded border border-border-subtle">{step.trim()}</span>
                           {idx < arr.length - 1 && <span className="text-border-strong">→</span>}

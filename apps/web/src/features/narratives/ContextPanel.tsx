@@ -37,7 +37,7 @@ export function ContextPanel() {
         <div>
           <div className="text-xs font-semibold text-text-secondary mb-3">Underlying Evidence</div>
           <div className="p-3 border-l-2 border-accent-primary bg-bg-base text-xs text-text-secondary italic">
-            "Q3 enterprise revenue grew by 15% year-over-year, driven primarily by expansion in the APAC region."
+            &quot;Q3 enterprise revenue grew by 15% year-over-year, driven primarily by expansion in the APAC region.&quot;
             <div className="mt-2 text-[10px] text-text-tertiary not-italic font-mono uppercase">
               Source: Q3 Earnings Transcript.pdf
             </div>

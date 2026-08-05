@@ -28,7 +28,7 @@ export function ContextPanel() {
       </div>
 
       <div className="space-y-6 relative before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-[2px] before:bg-border-subtle">
-        {evo.projectTimeline.map((pt, idx) => (
+        {evo.projectTimeline.map((pt: any, idx: number) => (
           <div key={idx} className="relative pl-8">
             <div className="absolute left-1 top-1.5 w-3.5 h-3.5 rounded-full border-2 border-border-strong bg-bg-base z-10" />
             
@@ -41,7 +41,7 @@ export function ContextPanel() {
             </div>
             
             <div className="text-xs text-text-secondary italic bg-bg-base p-2 rounded border border-border-subtle mt-2">
-              "{pt.context}"
+              &quot;{pt.context}&quot;
             </div>
           </div>
         ))}

@@ -37,7 +37,7 @@ export function ContextPanel() {
 
         <div>
           <div className="text-xs font-semibold text-text-secondary mb-2">Linked Risks</div>
-          {mockHypothesisPremium.risks.map(r => (
+          {mockHypothesisPremium.risks.map((r: any) => (
             <div key={r.id} className="p-2 border border-accent-danger/20 bg-accent-danger/5 rounded text-xs text-text-primary">
               ⚠️ {r.statement}
             </div>
