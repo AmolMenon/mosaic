@@ -1,11 +1,13 @@
 "use client";
 import React from "react";
+import { useParams } from "next/navigation";
 import { useQuestionsStore } from "../../store/questions";
 import { useQuestions } from "../../hooks/queries";
 
 export function ContextPanel() {
   const { activeQuestionId } = useQuestionsStore();
-  const { data } = useQuestions();
+  const params = useParams();
+  const { data } = useQuestions(params.id as string);
 
   if (!activeQuestionId) {
     return (

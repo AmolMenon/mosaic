@@ -87,13 +87,23 @@ export function useQuestionsDetail() {
   });
 }
 
-export function useUploadDocument() {
+import { useQueryClient } from '@tanstack/react-query';
+
+export function useUploadDocument(projectId?: string) {
+  const queryClient = useQueryClient();
+  
   return useMutation({
     mutationFn: (formData: FormData) => {
       return httpClient<any>('/api/v1/ingestion/upload', {
         method: 'POST',
         body: formData
       }).then(r => r.data);
+    },
+    onSuccess: () => {
+      if (projectId) {
+        // Optimistically invalidate the documents list so the new upload shows up immediately
+        queryClient.invalidateQueries({ queryKey: queryKeys.documents.list(projectId) });
+      }
     }
   });
 }

@@ -5,7 +5,7 @@ import { Folder, HardDrive, HelpCircle, FileText } from "lucide-react";
 import styles from "./landing.module.css";
 
 export default function HomePage() {
-  const defaultProjectId = "p-123";
+  const defaultProjectId = "prj_01HVKM4T";
 
   return (
     <div className={styles.container}>

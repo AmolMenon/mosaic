@@ -4,9 +4,12 @@ import { useQuestionsStore } from "../../store/questions";
 import { useQuestions } from "../../hooks/queries";
 import { clsx } from "clsx";
 
+import { useParams } from "next/navigation";
+
 export function CenterPanel() {
   const { activeQuestionId } = useQuestionsStore();
-  const { data, isLoading } = useQuestions();
+  const params = useParams();
+  const { data, isLoading } = useQuestions(params.id as string);
 
   if (isLoading) return <div className="flex-1 h-full flex items-center justify-center text-text-tertiary">Loading question...</div>;
   if (!data) return null;

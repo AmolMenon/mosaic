@@ -7,21 +7,26 @@ import { mockProjectLBO } from "@mosaic/testing";
 
 export const projectsRouter = Router();
 
+let projectsStore: any[] = [mockProjectLBO];
+
 const mockProjectService = {
   listProjects: async (limit: number, cursor?: string) => {
     return {
-      projects: [mockProjectLBO],
+      projects: projectsStore,
       nextCursor: null,
       hasMore: false
     };
   },
   getProject: async (id: string) => {
-    if (id === mockProjectLBO.id || id === 'defaultProjectId') return mockProjectLBO;
+    const proj = projectsStore.find(p => p.id === id);
+    if (proj || id === 'defaultProjectId') return proj || mockProjectLBO;
     throw new ApiException(404, "NOT_FOUND", "Project not found");
   },
   createProject: async (name: string) => {
     if (!name) throw new ApiException(400, "INVALID_INPUT", "Project name is required.");
-    return { id: "proj_2", name };
+    const newProj = { ...mockProjectLBO, id: `proj_${Date.now()}`, name };
+    projectsStore.push(newProj);
+    return newProj;
   }
 };
 

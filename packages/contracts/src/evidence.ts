@@ -48,23 +48,13 @@ export interface ClaimEvidenceLink {
   confidence: ConfidenceLevel;
 }
 
+import { Question } from './questions';
+import { Insight } from './insights';
+
 export interface Claim {
   id: string;
   insightId: string; // Normalized: links upwards
   statement: string;
-}
-
-export interface Insight {
-  id: string;
-  questionId: string; // Normalized: links upwards
-  summary: string;
-}
-
-export interface Question {
-  id: string;
-  projectId: string;
-  text: string;
-  status: 'open' | 'answered' | 'blocked';
 }
 
 // Normalized Data Store format (e.g., how the frontend holds it)

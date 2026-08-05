@@ -11,7 +11,7 @@ export const queryClient = new QueryClient({
       retry: (failureCount, error) => {
         // Don't retry auth or validation errors
         if (error instanceof ApiError) {
-          if (error.status === 401 || error.status === 403 || error.status === 400) {
+          if (error.status === 401 || error.status === 403 || error.status === 400 || error.status === 404) {
             return false;
           }
         }

@@ -6,12 +6,15 @@ import { RightPanel } from "../../../features/projects/RightPanel";
 import { useProject } from "../../../hooks/queries";
 import { useEvidenceTrace } from "../../../store/evidence-trace";
 
-export default function ProjectLayout({ children, params }: { children: React.ReactNode, params: { id: string } }) {
-  const { data: project, isLoading } = useProject(params.id);
+import { ProjectSkeleton } from "../../../components/ProjectSkeleton";
+
+export default function ProjectLayout({ children, params }: { children: React.ReactNode, params: Promise<{ id: string }> }) {
+  const { id } = React.use(params);
+  const { data: project, isLoading } = useProject(id);
   const setTraceActive = useEvidenceTrace((state) => state.setTraceActive);
   const isTraceActive = useEvidenceTrace((state) => state.isTraceActive);
 
-  if (isLoading) return <div className="flex h-screen w-full bg-bg-base items-center justify-center">Loading project...</div>;
+  if (isLoading) return <ProjectSkeleton />;
   if (!project) return <div className="flex h-screen w-full bg-bg-base items-center justify-center text-red-500">Project not found</div>;
 
   useEffect(() => {
