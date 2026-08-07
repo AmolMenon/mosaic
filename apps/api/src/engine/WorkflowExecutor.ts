@@ -11,6 +11,17 @@ export class WorkflowExecutor {
   async execute(pipeline: IngestionPipeline, stageProviders: Record<string, string>): Promise<void> {
     this.context.logger.log({ type: "ExecutionStarted", workflowId: pipeline.id });
     this.stateMachine.transitionTo('Running');
+    
+    // Lazy loaded to avoid circular deps if any
+    const { ExecutionRepository } = require("../infrastructure/persistence/repositories/ExecutionRepository");
+    const executionRepo = new ExecutionRepository(this.context.db);
+    
+    // We assume the execution row already exists, just update its status
+    executionRepo.update(pipeline.id, {
+      status: "RUNNING",
+      progress_state: "STARTED"
+    }, 1, this.context.uow);
+    await this.context.uow.commit();
 
     const stageExecutor = new StageExecutor(this.context);
 
@@ -30,15 +41,30 @@ export class WorkflowExecutor {
         if (!success && stage.status === 'awaiting_human') {
           this.stateMachine.transitionTo('WaitingForHuman');
           this.context.logger.log({ type: "ExecutionPaused", workflowId: pipeline.id });
+          executionRepo.update(pipeline.id, {
+            status: "PAUSED",
+            progress_state: `WAITING_FOR_HUMAN_${stage.id}`
+          }, 2, this.context.uow);
+          await this.context.uow.commit();
           return; // Halts workflow loop
         }
       }
 
       this.stateMachine.transitionTo('Completed');
       this.context.logger.log({ type: "ExecutionCompleted", workflowId: pipeline.id });
+      executionRepo.update(pipeline.id, {
+        status: "COMPLETED",
+        progress_state: "DONE"
+      }, 2, this.context.uow);
+      await this.context.uow.commit();
     } catch (err: any) {
       this.stateMachine.transitionTo('Failed');
       this.context.logger.log({ type: "ExecutionFailed", workflowId: pipeline.id, payload: err.message });
+      executionRepo.update(pipeline.id, {
+        status: "FAILED",
+        progress_state: "ERROR"
+      }, 2, this.context.uow);
+      await this.context.uow.commit();
       throw err;
     }
   }

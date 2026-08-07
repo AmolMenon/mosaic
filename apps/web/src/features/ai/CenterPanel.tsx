@@ -4,23 +4,12 @@ import { useAiStore } from "../../store/ai";
 import { useAI } from "../../hooks/queries";
 import { clsx } from "clsx";
 import { AIThinking } from "./AIThinking";
-import { useEffect, useState } from "react";
 
 export function CenterPanel() {
   const { activeProposalId, setActiveProposal } = useAiStore();
   const { data, isLoading } = useAI();
-  const [step, setStep] = useState(0);
 
-  useEffect(() => {
-    if (isLoading) {
-      const interval = setInterval(() => {
-        setStep(s => (s + 1) % 4);
-      }, 1500);
-      return () => clearInterval(interval);
-    }
-  }, [isLoading]);
-  
-  if (isLoading) return <div className="flex-1 overflow-hidden bg-bg-base relative"><AIThinking step={step} /></div>;
+  if (isLoading) return <div className="flex-1 overflow-hidden bg-bg-base relative flex"><AIThinking /></div>;
   if (!data) return null;
 
   const assignment = data.assignmentChallengePricing;

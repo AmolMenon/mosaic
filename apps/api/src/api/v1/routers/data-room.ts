@@ -19,8 +19,14 @@ dataRoomRouter.get("/documents", requireAuth, async (req: any, res: any, next: a
 
 dataRoomRouter.get("/questions", requireAuth, async (req: any, res: any, next: any) => {
   try {
-    const { mockProjectQuestions } = require("@mosaic/testing");
-    res.json(formatSuccessResponse(mockProjectQuestions));
+    const questions = await prisma.projectQuestion.findMany({
+      where: {
+        project: {
+          organizationId: req.principal.organizationId
+        }
+      }
+    });
+    res.json(formatSuccessResponse(questions));
   } catch (err) {
     next(err);
   }

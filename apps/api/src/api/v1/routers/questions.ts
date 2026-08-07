@@ -1,18 +1,35 @@
 import { Router } from "express";
 import { requireAuth } from "../dependencies/auth";
 import { formatSuccessResponse } from "../dependencies/responses";
-import { mockQuestionPricing, mockHypothesisPremium, mockHypothesisVulnerable, mockEvidence1, mockEvidence2 } from "@mosaic/testing";
+
+
+import { PrismaClient } from "@prisma/client";
 
 export const questionsRouter = Router();
+const prisma = new PrismaClient();
 
 questionsRouter.get("/", requireAuth, async (req: any, res: any, next: any) => {
   try {
+    const questions = await prisma.projectQuestion.findMany({
+      where: {
+        project: {
+          organizationId: req.principal.organizationId
+        }
+      }
+    });
+
+    const artifacts = await prisma.pipelineArtifact.findMany({
+      where: {
+        artifact_type: {
+          in: ['hypothesis', 'evidence']
+        }
+      }
+    });
+
     res.json(formatSuccessResponse({
-      questionPricing: mockQuestionPricing,
-      hypothesisPremium: mockHypothesisPremium,
-      hypothesisVulnerable: mockHypothesisVulnerable,
-      evidence1: mockEvidence1,
-      evidence2: mockEvidence2
+      questions,
+      hypotheses: artifacts.filter(a => a.artifact_type === 'hypothesis').map(a => a.payload),
+      evidence: artifacts.filter(a => a.artifact_type === 'evidence').map(a => a.payload)
     }));
   } catch (err) {
     next(err);

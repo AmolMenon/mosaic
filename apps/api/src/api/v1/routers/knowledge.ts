@@ -1,31 +1,24 @@
 import { Router } from "express";
 import { requireAuth } from "../dependencies/auth";
 import { formatSuccessResponse } from "../dependencies/responses";
-import { 
-  mockKnowledgeAssetPricing, 
-  mockPrinciplePricingPower, 
-  mockChallengeHelios,
-  mockKnowledgeUsageApollo,
-  mockTaxonomyRoot,
-  mockTaxonomyPricing,
-  mockTaxonomyPremiumization,
-  mockTaxonomyElasticity 
-} from "@mosaic/testing";
+
+
+import { PrismaClient } from "@prisma/client";
 
 export const knowledgeRouter = Router();
+const prisma = new PrismaClient();
 
 knowledgeRouter.get("/", requireAuth, async (req: any, res: any, next: any) => {
   try {
-    res.json(formatSuccessResponse({
-      knowledgeAssetPricing: mockKnowledgeAssetPricing,
-      principlePricingPower: mockPrinciplePricingPower,
-      challengeHelios: mockChallengeHelios,
-      knowledgeUsageApollo: mockKnowledgeUsageApollo,
-      taxonomyRoot: mockTaxonomyRoot,
-      taxonomyPricing: mockTaxonomyPricing,
-      taxonomyPremiumization: mockTaxonomyPremiumization,
-      taxonomyElasticity: mockTaxonomyElasticity
-    }));
+    const artifacts = await prisma.pipelineArtifact.findMany({
+      where: {
+        artifact_type: {
+          in: ['knowledge_asset', 'principle', 'taxonomy']
+        }
+      }
+    });
+
+    res.json(formatSuccessResponse(artifacts.map(a => a.payload)));
   } catch (err) {
     next(err);
   }

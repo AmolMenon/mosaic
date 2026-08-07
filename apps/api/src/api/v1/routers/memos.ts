@@ -1,17 +1,20 @@
 import { Router } from "express";
 import { requireAuth } from "../dependencies/auth";
 import { formatSuccessResponse } from "../dependencies/responses";
-import { mockMemoApolloIC, mockMemoBlockPrinciple, mockMemoBlockArgument } from "@mosaic/testing";
+
+
+import { PrismaClient } from "@prisma/client";
 
 export const memosRouter = Router();
+const prisma = new PrismaClient();
 
 memosRouter.get("/", requireAuth, async (req: any, res: any, next: any) => {
   try {
-    res.json(formatSuccessResponse({
-      memoApolloIC: mockMemoApolloIC,
-      memoBlockPrinciple: mockMemoBlockPrinciple,
-      memoBlockArgument: mockMemoBlockArgument
-    }));
+    const artifacts = await prisma.pipelineArtifact.findMany({
+      where: { artifact_type: 'memo' }
+    });
+    
+    res.json(formatSuccessResponse(artifacts.map(a => a.payload)));
   } catch (err) {
     next(err);
   }

@@ -55,13 +55,35 @@ projectsRouter.get("/:id", requireAuth, async (req: any, res: any, next: any) =>
 
 projectsRouter.get("/:id/insights", requireAuth, async (req: any, res: any, next: any) => {
   try {
-    // Keep mock insights since insights are a separate domain
-    const { mockInsight1, mockClaim1, mockClaim2, mockEvidence1, mockEvidence2, mockLink1, mockLink2 } = require("@mosaic/testing");
+    const projectId = req.params.id;
+    // Verify authorization
+    const project = await prisma.project.findUnique({
+      where: { id: projectId }
+    });
+    
+    if (!project || project.organizationId !== req.principal.organizationId) {
+      throw new ApiException(403, "FORBIDDEN", "Not authorized to access this project");
+    }
+
+    // Fetch real artifacts from pipeline executions for this project
+    const artifacts = await prisma.pipelineArtifact.findMany({
+      where: {
+        execution: {
+          pipeline_id: projectId
+        }
+      }
+    });
+
+    const insights = artifacts.filter(a => a.artifact_type === 'insight').map(a => a.payload);
+    const claims = artifacts.filter(a => a.artifact_type === 'claim').map(a => a.payload);
+    const evidence = artifacts.filter(a => a.artifact_type === 'evidence').map(a => a.payload);
+    const links = artifacts.filter(a => a.artifact_type === 'link').map(a => a.payload);
+
     res.json(formatSuccessResponse({
-      insight: mockInsight1,
-      claims: [mockClaim1, mockClaim2],
-      evidence: [mockEvidence1, mockEvidence2],
-      links: [mockLink1, mockLink2]
+      insights,
+      claims,
+      evidence,
+      links
     }));
   } catch (err) {
     next(err);

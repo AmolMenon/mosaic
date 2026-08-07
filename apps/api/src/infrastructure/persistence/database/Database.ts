@@ -1,5 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { DatabaseHealth } from "./DatabaseHealth";
+import { logger } from "../../../utils/logger";
+
 /**
  * PostgreSQL Database Client for the persistence layer wrapping Prisma.
  */
@@ -11,15 +13,20 @@ export class Database {
       query: {
         $allModels: {
           async $allOperations({ operation, model, args, query }) {
-            const result = await query(args);
-            // Example of audit logging for mutations (create, update, delete)
-            if (['create', 'update', 'delete', 'updateMany', 'deleteMany'].includes(operation)) {
-              // Note: We don't have request context here, but in a real app
-              // you'd pass user/tenant context via async local storage.
-              // We just log to console here or we can emit an event.
-              console.log(`[Audit] ${operation} on ${model}`);
+            try {
+              const start = Date.now();
+              const result = await query(args);
+              const duration = Date.now() - start;
+              
+              if (['create', 'update', 'delete', 'updateMany', 'deleteMany'].includes(operation)) {
+                if (process.env.NODE_ENV !== 'production' || duration > 100) {
+                  logger.info(`[Audit] ${operation} on ${model}`, { durationMs: duration, model, operation });
+                }
+              }
+              return result;
+            } catch (error) {
+              throw error;
             }
-            return result;
           }
         }
       }

@@ -1,5 +1,6 @@
 import { IngestionStage } from "@mosaic/contracts";
 import { ExecutionContext } from "./ExecutionContext";
+import { ArtifactRepository } from "../infrastructure/persistence/repositories/ArtifactRepository";
 
 export class StageExecutor {
   constructor(private context: ExecutionContext) {}
@@ -23,16 +24,19 @@ export class StageExecutor {
       inputs[art.type] = art.payload;
     }
 
+    let artifactRepo = new ArtifactRepository(this.context.db);
+
     try {
       // Execute Provider
       const result = await providerFn(inputs);
       
-      // We expect the provider to return a single output for this mocked engine, 
-      // mapped to the first output contract type
+      // Start Transaction AFTER external call
+      await this.context.uow.startTransaction();
+      
       const outType = stage.contract.outputArtifactTypes[0];
       if (!outType) {
-         // Stage has no outputs
          this.context.logger.log({ type: "StageCompleted", workflowId: this.context.workflowId, stageId: stage.id });
+         await this.context.uow.commit();
          return true;
       }
 
@@ -41,14 +45,25 @@ export class StageExecutor {
       
       if (!gateResult.passed) {
         this.context.logger.log({ type: "QualityGateFailed", workflowId: this.context.workflowId, stageId: stage.id, payload: gateResult.failedGates });
-        // Handle failure actions
         if (gateResult.failedGates.some(g => g.actionOnFailure === 'pause_for_human')) {
           stage.status = 'awaiting_human';
-          // Store intermediate result anyway for human review
           const art = this.context.artifacts.storeArtifact(outType, result, stage.id, providerName, this.context.workflowId);
+          artifactRepo.save({
+             artifact_id: art.id,
+             execution_id: this.context.workflowId, // Assumes workflowId is execution_id
+             document_id: this.context.documentId, 
+             artifact_type: art.type,
+             payload: art.payload,
+             producer_stage: art.provenance.producerStage,
+             provider_id: art.provenance.provider,
+             provider_version: art.provenance.version.toString(),
+             created_at: new Date(art.provenance.timestamp)
+          }, this.context.uow);
           stage.outputArtifactIds.push(art.id);
+          await this.context.uow.commit();
           return false; // Paused
         } else if (gateResult.failedGates.some(g => g.actionOnFailure === 'fail_pipeline')) {
+          await this.context.uow.rollback();
           throw new Error(`Quality gate failed with fail_pipeline action`);
         }
       }
@@ -57,12 +72,30 @@ export class StageExecutor {
       const artifact = this.context.artifacts.storeArtifact(outType, result, stage.id, providerName, this.context.workflowId);
       stage.outputArtifactIds.push(artifact.id);
       
+      // Save artifact to DB
+      artifactRepo.save({
+         artifact_id: artifact.id,
+         execution_id: this.context.workflowId, 
+         document_id: this.context.documentId,
+         artifact_type: artifact.type,
+         payload: artifact.payload,
+         producer_stage: artifact.provenance.producerStage,
+         provider_id: artifact.provenance.provider,
+         provider_version: artifact.provenance.version.toString(),
+         created_at: new Date(artifact.provenance.timestamp)
+      }, this.context.uow);
+      
       this.context.logger.log({ type: "ArtifactProduced", workflowId: this.context.workflowId, stageId: stage.id, payload: artifact.id });
       this.context.logger.log({ type: "StageCompleted", workflowId: this.context.workflowId, stageId: stage.id });
       stage.status = 'success';
+      
+      // Commit transaction
+      await this.context.uow.commit();
+      
       return true;
 
     } catch (err: any) {
+      await this.context.uow.rollback();
       this.context.logger.log({ type: "StageFailed", workflowId: this.context.workflowId, stageId: stage.id, payload: err.message });
       
       if (this.context.retries.shouldRetry(stage.retryCount, err)) {

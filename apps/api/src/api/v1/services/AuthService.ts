@@ -1,39 +1,49 @@
 import { PrismaClient } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
 import crypto from "crypto";
+import jwt from "jsonwebtoken";
 
 const prisma = new PrismaClient();
+const JWT_SECRET = process.env.JWT_SECRET as string;
+const JWT_ISSUER = "mosaic-os";
+const JWT_AUDIENCE = "mosaic-api";
 
 export class AuthService {
   static async verifyToken(token: string) {
-    const session = await prisma.session.findUnique({
-      where: { token },
-      include: {
-        user: {
-          include: {
-            memberships: true,
-          }
+    try {
+      const decoded = jwt.verify(token, JWT_SECRET, {
+        issuer: JWT_ISSUER,
+        audience: JWT_AUDIENCE,
+      }) as { userId: string };
+
+      const user = await prisma.user.findUnique({
+        where: { id: decoded.userId },
+        include: {
+          memberships: true,
         }
-      }
-    });
+      });
 
-    if (!session) {
+      return user;
+    } catch (e) {
       return null;
     }
-
-    if (session.expiresAt < new Date()) {
-      await prisma.session.delete({ where: { id: session.id } });
-      return null;
-    }
-
-    return session.user;
   }
 
   static async createSession(userId: string) {
-    const token = crypto.randomBytes(32).toString('hex');
-    const expiresAt = new Date();
-    expiresAt.setDate(expiresAt.getDate() + 7); // 7 days
+    const token = jwt.sign(
+      { userId },
+      JWT_SECRET,
+      {
+        expiresIn: "7d",
+        issuer: JWT_ISSUER,
+        audience: JWT_AUDIENCE,
+      }
+    );
 
+    const expiresAt = new Date();
+    expiresAt.setDate(expiresAt.getDate() + 7);
+
+    // Save session in DB as well to allow manual revocation if needed
     const session = await prisma.session.create({
       data: {
         userId,

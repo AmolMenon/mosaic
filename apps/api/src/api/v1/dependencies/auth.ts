@@ -15,16 +15,7 @@ export async function requireAuth(req: any, res: any, next: any) {
       throw new ApiException(401, 'UNAUTHORIZED', 'Missing token');
     }
     
-    // In dev mode, bypass if token is valid-token
-    if (token === 'valid-token') {
-      req.principal = {
-        id: 'usr_123',
-        roles: ['admin'],
-        organizationId: 'org_123'
-      };
-      return next();
-    }
-    
+
     const user = await AuthService.verifyToken(token);
     
     if (!user) {
