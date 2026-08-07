@@ -75,9 +75,7 @@ export class ICReviewProvider implements BaseProvider {
 
         // 5. Evidence / Hypothesis Validation
         if (!this.reviewValidator.validate(validatedSchema, reviewContext)) {
-          this.metricsData.validationFailures++;
-          this.metricsData.rejectedReviews++;
-          continue; // Discard invalid adversarial critique
+          throw new Error("Validation failed for review: " + JSON.stringify(validatedSchema) + " with context: " + JSON.stringify(reviewContext));
         }
 
         // 6. Deterministic Scoring
@@ -116,6 +114,7 @@ export class ICReviewProvider implements BaseProvider {
         allArtifacts.push(...artifacts);
 
       } catch (e) {
+        console.error("ICReviewProvider Error:", e);
         this.metricsData.validationFailures++;
         this.metricsData.rejectedReviews++;
       }

@@ -48,7 +48,7 @@ export class ArtifactRepository extends BaseRepository {
     if (!artifact) return null;
     return {
       ...artifact,
-      created_at: artifact.created_at.toISOString(),
+      created_at: artifact.created_at,
       payload: artifact.payload as any
     };
   }
@@ -59,7 +59,7 @@ export class ArtifactRepository extends BaseRepository {
     });
     return artifacts.map(a => ({
       ...a,
-      created_at: a.created_at.toISOString(),
+      created_at: a.created_at,
       payload: a.payload as any
     }));
   }
@@ -70,7 +70,7 @@ export class ArtifactRepository extends BaseRepository {
     });
     return artifacts.map(a => ({
       ...a,
-      created_at: a.created_at.toISOString(),
+      created_at: a.created_at,
       payload: a.payload as any
     }));
   }

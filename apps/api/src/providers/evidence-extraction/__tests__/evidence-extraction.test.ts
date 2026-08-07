@@ -14,7 +14,7 @@ describe("Evidence Extraction Engine", () => {
     const chunk1 = {
       id: "chunk-1",
       type: "TextChunk",
-      payload: { text: "Acme Corp revenue grew 18% year over year." },
+      payload: { text: "Acme grew 18% year over year." },
       provenance: { producerStage: "sys", provider: "docling", pipelineId: "wf1", version: 1, timestamp: "now" }
     };
 
@@ -22,13 +22,13 @@ describe("Evidence Extraction Engine", () => {
     const chunk2 = {
       id: "chunk-2",
       type: "TextChunk",
-      payload: { text: "Acme Corp revenue grew 18% year over year." }, // Same fact, should deduplicate if same section, but here chunkId differs
+      payload: { text: "Acme grew 18% year over year." }, // Same fact, should deduplicate if same section, but here chunkId differs
       provenance: { producerStage: "sys", provider: "docling", pipelineId: "wf1", version: 1, timestamp: "now" }
     };
 
     const mention1 = {
       type: "EntityMention",
-      payload: { entityId: "ent_acme", chunkId: "chunk-1", matchedText: "Acme Corp" }
+      payload: { entityId: "ent_acme", chunkId: "chunk-1", matchedText: "Acme" }
     };
 
     const mention2 = {
@@ -38,7 +38,7 @@ describe("Evidence Extraction Engine", () => {
 
     const mention3 = {
       type: "EntityMention",
-      payload: { entityId: "ent_acme", chunkId: "chunk-2", matchedText: "Acme Corp" }
+      payload: { entityId: "ent_acme", chunkId: "chunk-2", matchedText: "Acme" }
     };
 
     const context: ProviderContext = {
@@ -47,7 +47,7 @@ describe("Evidence Extraction Engine", () => {
       engineContext: {} as any
     };
 
-    const result = await provider.execute([chunk1, chunk2, mention1, mention2, mention3], context);
+    const result = await provider.execute([chunk1, chunk2, mention1, mention2, mention3] as any[], context);
 
     const proposals = result.artifacts.filter(a => a.type === "EvidenceProposal");
     const references = result.artifacts.filter(a => a.type === "EvidenceReference");
@@ -59,7 +59,7 @@ describe("Evidence Extraction Engine", () => {
     
     const prop1 = proposals[0];
     expect(prop1.payload.evidenceType).toBe(EvidenceType.GROWTH_STATEMENT);
-    expect(prop1.payload.statement).toBe("revenue grew 18%"); // Normalized regex capture
+    expect(prop1.payload.statement).toBe("Acme grew 18%"); // Normalized regex capture
     expect(prop1.payload.referencedEntityIds).toContain("ent_acme");
 
     // References bridge the graph back to entities

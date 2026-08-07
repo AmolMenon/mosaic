@@ -5,7 +5,7 @@ import { formatSuccessResponse } from "../dependencies/responses";
 
 import { PrismaClient } from "@prisma/client";
 
-export const narrativesRouter = Router();
+export const narrativesRouter: import("express").Router = Router();
 const prisma = new PrismaClient();
 
 narrativesRouter.get("/", requireAuth, async (req: any, res: any, next: any) => {

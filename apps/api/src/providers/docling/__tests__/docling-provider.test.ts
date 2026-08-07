@@ -44,7 +44,7 @@ describe("DoclingProvider Integration", () => {
       engineContext: {} as any
     };
 
-    const inputs = [{
+    const inputs: any[] = [{
       id: "art-1",
       type: "raw_pdf",
       payload: { filepath: "test.pdf" },

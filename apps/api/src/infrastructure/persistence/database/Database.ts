@@ -48,11 +48,11 @@ export class Database {
 
   async health(): Promise<DatabaseHealth> {
     const start = Date.now();
-    let status = "Healthy";
+    let status: "Healthy" | "Degraded" | "Failed" = "Healthy";
     try {
       await this.client.$queryRaw`SELECT 1`;
     } catch (e) {
-      status = "Unhealthy";
+      status = "Failed";
     }
     return {
       status,

@@ -5,7 +5,7 @@ import { formatSuccessResponse } from "../dependencies/responses";
 
 import { PrismaClient } from "@prisma/client";
 
-export const knowledgeRouter = Router();
+export const knowledgeRouter: import("express").Router = Router();
 const prisma = new PrismaClient();
 
 knowledgeRouter.get("/", requireAuth, async (req: any, res: any, next: any) => {

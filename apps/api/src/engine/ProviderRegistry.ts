@@ -1,4 +1,4 @@
-export type ProviderExecuteFn = (inputs: Record<string, any>) => Promise<Record<string, any>>;
+export type ProviderExecuteFn = (inputs: Record<string, any>, context?: any) => Promise<Record<string, any>>;
 
 export interface ProviderRegistration {
   name: string;

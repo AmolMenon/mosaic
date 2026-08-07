@@ -17,6 +17,7 @@ export class WorkflowExecutor {
     const executionRepo = new ExecutionRepository(this.context.db);
     
     // We assume the execution row already exists, just update its status
+    await this.context.uow.startTransaction();
     executionRepo.update(pipeline.id, {
       status: "RUNNING",
       progress_state: "STARTED"
@@ -41,6 +42,7 @@ export class WorkflowExecutor {
         if (!success && stage.status === 'awaiting_human') {
           this.stateMachine.transitionTo('WaitingForHuman');
           this.context.logger.log({ type: "ExecutionPaused", workflowId: pipeline.id });
+          await this.context.uow.startTransaction();
           executionRepo.update(pipeline.id, {
             status: "PAUSED",
             progress_state: `WAITING_FOR_HUMAN_${stage.id}`
@@ -52,6 +54,7 @@ export class WorkflowExecutor {
 
       this.stateMachine.transitionTo('Completed');
       this.context.logger.log({ type: "ExecutionCompleted", workflowId: pipeline.id });
+      await this.context.uow.startTransaction();
       executionRepo.update(pipeline.id, {
         status: "COMPLETED",
         progress_state: "DONE"
@@ -60,6 +63,7 @@ export class WorkflowExecutor {
     } catch (err: any) {
       this.stateMachine.transitionTo('Failed');
       this.context.logger.log({ type: "ExecutionFailed", workflowId: pipeline.id, payload: err.message });
+      await this.context.uow.startTransaction();
       executionRepo.update(pipeline.id, {
         status: "FAILED",
         progress_state: "ERROR"

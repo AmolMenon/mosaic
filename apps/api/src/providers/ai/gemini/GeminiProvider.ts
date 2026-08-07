@@ -1,5 +1,5 @@
 import { GoogleGenAI } from '@google/genai';
-import { BaseAiProvider, AiProviderContext, AiCompletionResult } from '../BaseAiProvider';
+import { BaseAiProvider, AiProviderContext, AiCompletionResult } from "../../../infrastructure/ai/providers/BaseAiProvider";
 import { SecretsProvider } from '../../../infrastructure/secrets/SecretsProvider';
 import { GeminiErrors } from './GeminiErrors';
 import { GeminiJsonValidator } from './GeminiJsonValidator';

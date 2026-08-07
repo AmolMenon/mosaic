@@ -1,5 +1,36 @@
 import request from "supertest";
-import { app } from "../../main";
+
+jest.mock("@prisma/client", () => {
+  return {
+    PrismaClient: jest.fn().mockImplementation(() => {
+      const client = {
+        $connect: jest.fn(),
+        $disconnect: jest.fn(),
+        $extends: jest.fn().mockReturnThis(),
+        user: {
+          findUnique: jest.fn().mockResolvedValue({
+            id: "user-123",
+            email: "test@example.com",
+            memberships: [
+              { organizationId: "org-1", role: "admin" }
+            ]
+          })
+        },
+        project: {
+          findMany: jest.fn().mockResolvedValue([{ id: "proj-1", name: "Project 1" }])
+        }
+      };
+      return client;
+    })
+  };
+});
+
+jest.mock("jsonwebtoken", () => ({
+  verify: jest.fn().mockReturnValue({ userId: "user-123" }),
+  sign: jest.fn().mockReturnValue("mock-token")
+}));
+
+import { app } from "../main";
 
 describe("API Layer", () => {
   it("should return 401 Unauthorized if no auth header is provided", async () => {
@@ -35,7 +66,7 @@ describe("API Layer", () => {
 
   it("should include custom headers from middleware", async () => {
     const res = await request(app)
-      .get("/api/v1/health/liveness");
+      .get("/api/v1/health/live");
       
     expect(res.status).toBe(200);
     expect(res.headers['x-request-id']).toBeDefined();

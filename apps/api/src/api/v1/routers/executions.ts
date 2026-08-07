@@ -9,7 +9,7 @@ import { ProviderRegistry } from "../../../engine/ProviderRegistry";
 import { Database } from "../../../infrastructure/persistence/database/Database";
 import { pipeline } from "stream";
 
-export const executionsRouter = Router();
+export const executionsRouter: import("express").Router = Router();
 const prisma = new PrismaClient();
 const db = new Database();
 
@@ -39,19 +39,19 @@ executionsRouter.post("/", requireAuth, async (req: any, res: any, next: any) =>
     const { HypothesisGenerationProvider } = require("../../../providers/hypothesis-generation/HypothesisGenerationProvider");
     const { ICReviewProvider } = require("../../../providers/ic-review/ICReviewProvider");
     
-    registry.register("EntityExtraction", async (inputs, context) => {
+    registry.register("EntityExtraction", async (inputs: any, context: any) => {
       const provider = new EntityExtractionProvider();
       await provider.initialize({ providerId: "entity_extraction" });
       return provider.execute(inputs, context);
     });
 
-    registry.register("HypothesisGeneration", async (inputs, context) => {
+    registry.register("HypothesisGeneration", async (inputs: any, context: any) => {
       const provider = new HypothesisGenerationProvider();
       await provider.initialize({ providerId: "hypothesis_generation" });
       return provider.execute(inputs, context);
     });
 
-    registry.register("ICReview", async (inputs, context) => {
+    registry.register("ICReview", async (inputs: any, context: any) => {
       const provider = new ICReviewProvider();
       await provider.initialize({ providerId: "ic_review" });
       return provider.execute(inputs, context);

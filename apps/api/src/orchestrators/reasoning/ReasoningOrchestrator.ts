@@ -78,7 +78,7 @@ export class ReasoningOrchestrator {
           
           // Merge provider metrics
           if (result.metrics) {
-            context.metrics.providerVersions[stage.providerId] = result.metrics.providerVersion;
+            context.metrics.providerVersions[stage.providerId] = result.metrics.providerVersion || "unknown";
             context.metrics.llmTokenUsage += (result.metrics as any).tokenConsumption || 0;
           }
 

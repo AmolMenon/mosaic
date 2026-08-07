@@ -54,8 +54,8 @@ export class ExecutionRepository extends BaseRepository {
     if (!execution) return null;
     return {
       ...execution,
-      started_at: execution.started_at.toISOString(),
-      completed_at: execution.completed_at ? execution.completed_at.toISOString() : undefined
+      started_at: execution.started_at,
+      completed_at: execution.completed_at ? execution.completed_at : null
     };
   }
 }

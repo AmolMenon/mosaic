@@ -18,6 +18,7 @@ export class ArtifactMapper {
 
   static toDomain(dbModel: DbPipelineArtifact): PipelineArtifact {
     return {
+      id: dbModel.artifact_id,
       type: dbModel.artifact_type,
       payload: dbModel.payload,
       provenance: {

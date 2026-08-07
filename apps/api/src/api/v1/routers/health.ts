@@ -1,7 +1,7 @@
 import { Router } from 'express';
 import { PrismaClient } from '@prisma/client';
 
-export const healthRouter = Router();
+export const healthRouter: import("express").Router = Router();
 
 healthRouter.get('/live', (req, res) => {
   res.status(200).json({ status: 'UP' });

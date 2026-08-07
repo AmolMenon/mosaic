@@ -13,6 +13,7 @@ export class TransactionManager {
     const uow = new UnitOfWork(this.db);
     
     try {
+      await uow.startTransaction();
       // Build the registered operations
       const result = await work(uow);
       

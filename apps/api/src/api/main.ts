@@ -20,7 +20,7 @@ import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import cors from "cors";
 
-export const app = express();
+export const app: import("express").Application = express();
 
 app.use(helmet());
 app.use(cors({

@@ -3,7 +3,7 @@ import { requireAuth } from "../dependencies/auth";
 import { formatSuccessResponse } from "../dependencies/responses";
 
 
-export const insightsRouter = Router();
+export const insightsRouter: import("express").Router = Router();
 
 insightsRouter.get("/", requireAuth, async (req: any, res: any, next: any) => {
   try {

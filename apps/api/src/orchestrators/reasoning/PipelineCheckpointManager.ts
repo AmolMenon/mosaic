@@ -20,6 +20,8 @@ export class PipelineCheckpointManager {
     // In production, this would serialize artifacts and write to a durable object store.
     // For this implementation, we use an in-memory store.
     
+    context.metrics.checkpointCount++;
+
     const checkpoint: PipelineCheckpoint = {
       executionId: context.executionId,
       stageId,
@@ -38,7 +40,6 @@ export class PipelineCheckpointManager {
     
     checkpoints.push(checkpoint);
 
-    context.metrics.checkpointCount++;
     context.metrics.executionLatencyMs += (Date.now() - start);
   }
 

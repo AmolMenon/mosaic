@@ -8,8 +8,10 @@ export class CompanyMatcher implements EntityMatcher {
     const mentions: CandidateMention[] = [];
     const text = chunk.payload.text || "";
     
-    for (const company of this.dict) {
-      const idx = text.indexOf(company);
+    const sortedDict = [...this.dict].sort((a, b) => b.length - a.length);
+    let tempText = text;
+    for (const company of sortedDict) {
+      const idx = tempText.indexOf(company);
       if (idx !== -1) {
         mentions.push({
           matchedText: company,
@@ -22,6 +24,7 @@ export class CompanyMatcher implements EntityMatcher {
           contextWindow: text.substring(Math.max(0, idx - 30), Math.min(text.length, idx + company.length + 30)),
           confidence: 0.95
         });
+        tempText = tempText.replace(company, ' '.repeat(company.length));
       }
     }
     

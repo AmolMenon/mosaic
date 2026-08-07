@@ -5,7 +5,8 @@ import { PipelineArtifact } from "@mosaic/contracts";
 import { DoclingHealth } from "./DoclingHealth";
 import { DoclingMetrics } from "./DoclingMetrics";
 import { DoclingConfiguration } from "./DoclingConfiguration";
-import { ConfigurationError, ParsingFailure, ProviderUnavailable, UnsupportedDocument } from "./DoclingErrors";
+import { ConfigurationError, ProviderUnavailable } from "../base/ProviderErrors";
+import { ParsingFailure, UnsupportedDocument } from "./DoclingErrors";
 import { DoclingMapper, DoclingRawOutput } from "./DoclingMapper";
 import { DoclingArtifactFactory } from "./DoclingArtifactFactory";
 import { spawn, ChildProcess } from "child_process";
@@ -24,6 +25,7 @@ export class DoclingProvider implements BaseProvider {
     totalRuntimeMs: 0,
     warningsCount: 0,
     failuresCount: 0,
+    providerVersion: "2.0.0-docling",
     pagesParsed: 0,
     sectionsParsed: 0,
     paragraphCount: 0,
@@ -31,7 +33,7 @@ export class DoclingProvider implements BaseProvider {
     tablesExtracted: 0,
     figuresExtracted: 0,
     imagesExtracted: 0,
-    providerVersion: "2.0.0-docling"
+    parserVersion: "1.0"
   };
 
   async initialize(config: ProviderConfiguration): Promise<void> {

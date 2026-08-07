@@ -9,7 +9,7 @@ const storageProvider = new S3StorageProvider();
 const prisma = new PrismaClient();
 const upload = multer({ storage: multer.memoryStorage() });
 
-export const ingestionRouter = Router();
+export const ingestionRouter: import("express").Router = Router();
 
 ingestionRouter.get("/", requireAuth, async (req: any, res: any, next: any) => {
   try {

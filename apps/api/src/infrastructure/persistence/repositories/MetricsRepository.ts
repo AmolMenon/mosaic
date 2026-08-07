@@ -14,7 +14,7 @@ export class MetricsRepository extends BaseRepository {
           provider_id: metric.provider_id,
           latency_ms: metric.latency_ms,
           token_usage: metric.token_usage,
-          created_at: new Date(metric.created_at)
+          created_at: metric.created_at ? new Date(metric.created_at) : new Date()
         }
       });
     });

@@ -5,7 +5,7 @@ import { formatSuccessResponse } from "../dependencies/responses";
 import { ApiException } from "../schemas/errors/errors";
 import { PrismaClient } from "@prisma/client";
 
-export const projectsRouter = Router();
+export const projectsRouter: import("express").Router = Router();
 const prisma = new PrismaClient();
 
 projectsRouter.get("/", requireAuth, parsePagination, async (req: any, res: any, next: any) => {

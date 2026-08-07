@@ -3,10 +3,55 @@ import { createExecutionContext } from "../ExecutionContext";
 import { WorkflowExecutor } from "../WorkflowExecutor";
 import { IngestionPipeline, IngestionStage } from "@mosaic/contracts";
 
+import { Database } from "../../infrastructure/persistence/database/Database";
+
+jest.mock("@prisma/client", () => {
+  return {
+    PrismaClient: jest.fn().mockImplementation(() => {
+      const client = {
+        $connect: jest.fn(),
+        $disconnect: jest.fn(),
+        $extends: jest.fn().mockReturnThis(),
+        $transaction: async (cb: any) => { await cb(client); },
+        execution: {
+          findUnique: async (data: any) => {
+            return (global as any).__memoryStore.executions.find((e: any) => e.execution_id === data.where.execution_id);
+          },
+          create: async (data: any) => {
+            (global as any).__memoryStore.executions.push(data.data);
+          },
+          update: async (data: any) => {
+            const exec = (global as any).__memoryStore.executions.find((e: any) => e.execution_id === data.where.execution_id);
+            if (exec) exec.version++;
+          }
+        },
+        pipelineArtifact: {
+          create: async (data: any) => {
+            (global as any).__memoryStore.pipeline_artifacts.push(data.data);
+          }
+        }
+      };
+      return client;
+    })
+  };
+});
+
 describe("Workflow Execution Engine", () => {
   let providers: ProviderRegistry;
+  let mockDb: Database;
 
   beforeEach(() => {
+    (global as any).__memoryStore = { 
+      executions: [
+        { execution_id: "wf_1", document_id: "doc_1", profile: "fast_review", status: "queued", stages: [], artifacts: [], version: 1 },
+        { execution_id: "wf_2", document_id: "doc_1", profile: "fast_review", status: "queued", stages: [], artifacts: [], version: 1 },
+        { execution_id: "wf_3", document_id: "doc_1", profile: "fast_review", status: "queued", stages: [], artifacts: [], version: 1 },
+        { execution_id: "wf_4", document_id: "doc_1", profile: "fast_review", status: "queued", stages: [], artifacts: [], version: 1 },
+        { execution_id: "wf_5", document_id: "doc_1", profile: "fast_review", status: "completed", stages: [], artifacts: [], version: 1 }
+      ], 
+      pipeline_artifacts: [] 
+    };
+    mockDb = new Database();
     providers = new ProviderRegistry();
     providers.register("MockOCR", async (inputs) => ({ text: "Parsed text" }));
     providers.register("MockExtraction", async (inputs) => ({ entities: ["Company A"] }));
@@ -25,7 +70,7 @@ describe("Workflow Execution Engine", () => {
   });
 
   it("should execute a successful workflow end-to-end", async () => {
-    const context = createExecutionContext("wf_1", providers);
+    const context = createExecutionContext("wf_1", "doc_1", providers, mockDb);
     const executor = new WorkflowExecutor(context);
     
     // Inject initial artifact manually for stage 1
@@ -60,7 +105,7 @@ describe("Workflow Execution Engine", () => {
   });
 
   it("should halt execution if a stage is missing required artifacts", async () => {
-    const context = createExecutionContext("wf_2", providers);
+    const context = createExecutionContext("wf_2", "doc_2", providers, mockDb);
     const executor = new WorkflowExecutor(context);
 
     // Stage expects raw_pdf but we don't give it any artifacts
@@ -82,7 +127,7 @@ describe("Workflow Execution Engine", () => {
   });
 
   it("should pause execution if a quality gate fails with pause_for_human", async () => {
-    const context = createExecutionContext("wf_3", providers);
+    const context = createExecutionContext("wf_3", "doc_3", providers, mockDb);
     const executor = new WorkflowExecutor(context);
     
     const startArtifact = context.artifacts.storeArtifact("raw_pdf", { url: "test.pdf" }, "init", "system", "wf_3");
@@ -110,7 +155,7 @@ describe("Workflow Execution Engine", () => {
   });
 
   it("should fail pipeline if a quality gate fails with fail_pipeline", async () => {
-    const context = createExecutionContext("wf_4", providers);
+    const context = createExecutionContext("wf_4", "doc_4", providers, mockDb);
     const executor = new WorkflowExecutor(context);
     
     const startArtifact = context.artifacts.storeArtifact("raw_pdf", { url: "test.pdf" }, "init", "system", "wf_4");
@@ -134,7 +179,7 @@ describe("Workflow Execution Engine", () => {
   });
 
   it("should throw on illegal state transitions", () => {
-    const context = createExecutionContext("wf_5", providers);
+    const context = createExecutionContext("wf_5", "doc_5", providers, mockDb);
     const executor = new WorkflowExecutor(context);
     
     // Engine is Queued on creation. Cannot resume.

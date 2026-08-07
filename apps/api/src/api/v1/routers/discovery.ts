@@ -5,7 +5,7 @@ import { formatSuccessResponse } from "../dependencies/responses";
 
 import { PrismaClient } from "@prisma/client";
 
-export const discoveryRouter = Router();
+export const discoveryRouter: import("express").Router = Router();
 const prisma = new PrismaClient();
 
 discoveryRouter.get("/", requireAuth, async (req: any, res: any, next: any) => {

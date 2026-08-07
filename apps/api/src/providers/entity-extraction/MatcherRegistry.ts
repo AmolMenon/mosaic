@@ -1,4 +1,4 @@
-import { EntityMatcher } from "./EntityMatcher";
+import { EntityMatcher } from "./matchers/EntityMatcher";
 
 export class MatcherRegistry {
   private matchers: EntityMatcher[] = [];

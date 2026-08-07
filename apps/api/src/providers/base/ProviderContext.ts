@@ -1,4 +1,4 @@
-import { ExecutionContext } from "../../../engine/ExecutionContext";
+import { ExecutionContext } from "../../engine/ExecutionContext";
 
 export interface ProviderContext {
   workflowId: string;

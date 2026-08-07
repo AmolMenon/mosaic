@@ -1,10 +1,43 @@
 import { ICReviewProvider } from "../ICReviewProvider";
 import { ProviderContext } from "../../base/ProviderContext";
+import { AnthropicProvider } from "../../../infrastructure/ai/providers/AnthropicProvider";
+
+jest.mock("../../../infrastructure/ai/providers/AnthropicProvider");
 
 describe("IC Review Engine", () => {
   let provider: ICReviewProvider;
 
   beforeAll(async () => {
+    (AnthropicProvider as jest.Mock).mockImplementation(() => {
+      return {
+        generateJson: jest.fn().mockResolvedValue({
+          text: JSON.stringify({
+            hypothesisId: "hyp_123",
+            executiveSummary: "Summary",
+            recommendedNextStep: "Step",
+            overallAssessment: "Weak",
+            strengths: ["None"],
+            weaknesses: ["Many"],
+            alternativeInterpretations: [],
+            counterarguments: [
+              {
+                claim: "Customer Churn is high.",
+                contradictingEvidenceIds: ["ev_2"]
+              }
+            ],
+            missingEvidence: [
+              {
+                missingInformation: "Need more data",
+                impactOnHypothesis: "High"
+              }
+            ],
+            risks: [],
+            questionsForManagement: []
+          })
+        })
+      };
+    });
+
     provider = new ICReviewProvider();
     await provider.initialize({ providerId: "ic_review", version: "1.0", timeoutMs: 1000, maxRetries: 0, processingProfile: "standard", debugMode: false });
   });
@@ -46,6 +79,9 @@ describe("IC Review Engine", () => {
     const counterArguments = result.artifacts.filter(a => a.type === "CounterArgument");
     const gaps = result.artifacts.filter(a => a.type === "DiligenceGap");
     const trace = result.artifacts.find(a => a.type === "ReviewTrace");
+    if (trace && trace.payload.status === "FAILED") {
+      require("fs").writeFileSync("error.log", trace.payload.error);
+    }
 
     expect(proposals.length).toBe(1);
     const review = proposals[0].payload;

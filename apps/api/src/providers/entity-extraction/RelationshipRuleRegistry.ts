@@ -1,4 +1,4 @@
-import { CanonicalEntity } from "../EntityDeduplicator";
+import { CanonicalEntity } from "./EntityDeduplicator";
 
 export interface RelationshipRule {
   evaluate(entities: CanonicalEntity[]): ExtractedRelationship[];

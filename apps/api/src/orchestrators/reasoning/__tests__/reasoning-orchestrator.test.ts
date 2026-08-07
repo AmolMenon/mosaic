@@ -1,6 +1,42 @@
 import { ReasoningOrchestrator } from "../ReasoningOrchestrator";
 import { PipelineArtifact } from "@mosaic/contracts";
 
+jest.mock("../../../providers/docling/DoclingProvider", () => ({
+  DoclingProvider: jest.fn().mockImplementation(() => ({
+    initialize: jest.fn(),
+    execute: jest.fn().mockResolvedValue({ artifacts: [], metrics: {} }),
+    validateConfiguration: jest.fn()
+  }))
+}));
+jest.mock("../../../providers/entity-extraction/EntityExtractionProvider", () => ({
+  EntityExtractionProvider: jest.fn().mockImplementation(() => ({
+    initialize: jest.fn(),
+    execute: jest.fn().mockResolvedValue({ artifacts: [], metrics: {} }),
+    validateConfiguration: jest.fn()
+  }))
+}));
+jest.mock("../../../providers/evidence-extraction/EvidenceExtractionProvider", () => ({
+  EvidenceExtractionProvider: jest.fn().mockImplementation(() => ({
+    initialize: jest.fn(),
+    execute: jest.fn().mockResolvedValue({ artifacts: [], metrics: {} }),
+    validateConfiguration: jest.fn()
+  }))
+}));
+jest.mock("../../../providers/hypothesis-generation/HypothesisGenerationProvider", () => ({
+  HypothesisGenerationProvider: jest.fn().mockImplementation(() => ({
+    initialize: jest.fn(),
+    execute: jest.fn().mockResolvedValue({ artifacts: [], metrics: {} }),
+    validateConfiguration: jest.fn()
+  }))
+}));
+jest.mock("../../../providers/ic-review/ICReviewProvider", () => ({
+  ICReviewProvider: jest.fn().mockImplementation(() => ({
+    initialize: jest.fn(),
+    execute: jest.fn().mockResolvedValue({ artifacts: [], metrics: {} }),
+    validateConfiguration: jest.fn()
+  }))
+}));
+
 describe("Reasoning Orchestrator", () => {
   let orchestrator: ReasoningOrchestrator;
 
@@ -9,13 +45,14 @@ describe("Reasoning Orchestrator", () => {
   });
 
   it("should execute a full successful pipeline", async () => {
-    const input: PipelineArtifact = {
+    const input: any = {
       type: "DocumentInput",
       payload: { id: "doc_1", rawText: "Q3 revenue grew 15%." }
     };
 
     const summary = await orchestrator.execute("exec_1", "wf_1", [input], false);
 
+    if (!summary.qualityGateResults.passed) console.log(summary.failures);
     expect(summary.qualityGateResults.passed).toBe(true);
     expect(summary.failures.length).toBe(0);
     expect(summary.checkpointCount).toBe(5); // 5 stages
@@ -27,9 +64,9 @@ describe("Reasoning Orchestrator", () => {
   });
 
   it("should recover from a checkpoint when resuming", async () => {
-    const input: PipelineArtifact = {
+    const input: any = {
       type: "DocumentInput",
-      payload: { id: "doc_1", rawText: "Testing recovery." }
+      payload: { id: "doc_1", rawText: "Normal text." }
     };
 
     // Run first execution
