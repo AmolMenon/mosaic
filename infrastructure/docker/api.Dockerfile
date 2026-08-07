@@ -4,7 +4,7 @@ WORKDIR /app
 # Install dependencies needed for node-gyp if required
 RUN apk add --no-cache python3 make g++
 
-RUN npm install -g pnpm
+RUN corepack enable pnpm
 COPY . .
 RUN pnpm install
 

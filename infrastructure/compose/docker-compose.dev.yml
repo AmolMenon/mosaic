@@ -6,7 +6,7 @@ services:
       context: ../../
       dockerfile: infrastructure/docker/api.Dockerfile
       target: builder
-    command: npm run dev --workspace=apps/api
+    command: pnpm --filter api run dev
     ports:
       - "3000:3000"
     volumes:
@@ -24,7 +24,7 @@ services:
       context: ../../
       dockerfile: infrastructure/docker/web.Dockerfile
       target: builder
-    command: npm run dev --workspace=apps/web
+    command: pnpm --filter web run dev
     ports:
       - "3001:3001"
     volumes:

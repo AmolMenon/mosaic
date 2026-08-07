@@ -14,7 +14,7 @@
    ```
 3. **Run Migrations** (if applicable):
    ```bash
-   docker-compose -f infrastructure/compose/docker-compose.prod.yml run --rm api npm run db:migrate
+   docker-compose -f infrastructure/compose/docker-compose.prod.yml run --rm api pnpm run db:migrate
    ```
 4. **Deploy Stack**:
    ```bash

@@ -2,7 +2,7 @@ services:
   - type: web
     name: mosaic-api
     env: node
-    buildCommand: npm install -g pnpm && pnpm install && pnpm run build --filter=api
+    buildCommand: corepack enable pnpm && pnpm install && pnpm run build --filter=api
     startCommand: cd apps/api && pnpm run start
     envVars:
       - key: NODE_ENV
@@ -13,7 +13,7 @@ services:
   - type: web
     name: mosaic-web
     env: node
-    buildCommand: npm install -g pnpm && pnpm install && pnpm run build --filter=web
+    buildCommand: corepack enable pnpm && pnpm install && pnpm run build --filter=web
     startCommand: cd apps/web && pnpm run start
     envVars:
       - key: NODE_ENV

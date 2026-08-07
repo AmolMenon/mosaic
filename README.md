@@ -17,9 +17,9 @@ Mosaic OS is an enterprise-grade platform designed for automated investment comm
 
 ## Installation & Local Development
 1. Clone the repository.
-2. Run `npm install`.
+2. Run `pnpm install`.
 3. Copy `.env.example` to `.env` and fill in required values (do not commit secrets).
-4. Run `npm run dev` to start the local development server.
+4. Run `pnpm run dev` to start the local development server.
 
 ## Docker & Deployment
 Mosaic is fully containerized. Use `docker-compose -f infrastructure/docker-compose.prod.yml up -d` for production deployments.
