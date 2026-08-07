@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
+    "postinstall": "prisma generate",
     "build": "tsup src/server.ts --format cjs --dts --clean",
     "start": "node dist/server.js",
     "dev": "tsx watch src/server.ts",
