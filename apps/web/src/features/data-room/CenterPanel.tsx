@@ -3,6 +3,7 @@ import React from "react";
 import { useDataRoomStore } from "../../store/data-room";
 import { clsx } from "clsx";
 import { ReadingMode } from "@mosaic/contracts";
+import { DocumentUploader } from "./components/DocumentUploader";
 
 const MODES: { id: ReadingMode; label: string }[] = [
   { id: "original", label: "Original" },
@@ -16,8 +17,8 @@ export function CenterPanel() {
 
   if (!context.documentId) {
     return (
-      <div className="flex-1 h-full flex items-center justify-center text-text-tertiary">
-        Select a document from the library to begin semantic reading.
+      <div className="flex-1 h-full flex flex-col items-center justify-center p-8 bg-[#1e1e1e]">
+        <DocumentUploader />
       </div>
     );
   }
@@ -43,38 +44,14 @@ export function CenterPanel() {
         </div>
       </div>
 
-      {/* Semantic Canvas Mock */}
+      {/* Semantic Canvas */}
       <div className="flex-1 overflow-y-auto p-8 relative flex justify-center">
         {/* Document Page Canvas */}
-        <div className="w-[800px] h-[1131px] bg-white text-black shadow-lg relative rounded-sm p-16">
-          <h2 className="text-2xl font-bold mb-6 font-serif">Q3 Financial Results</h2>
-          
-          <div className="space-y-4 font-serif leading-relaxed text-sm">
-            <p>
-              The company delivered strong performance in Q3, achieving a 15% year-over-year revenue growth. 
-              This was primarily driven by the expansion of our enterprise segment in the APAC region.
-            </p>
-
-            {/* Simulated Bounding Box Overlay based on mode */}
-            <div className="relative">
-              <p>
-                However, management expects enterprise churn to increase to 8% due to macro headwinds 
-                and aggressive pricing from competitors.
-              </p>
-              
-              {/* Overlays */}
-              {context.readingMode === 'evidence' && (
-                <div className="absolute inset-0 bg-yellow-300/30 border border-yellow-500 rounded cursor-pointer hover:bg-yellow-300/50 transition-colors" />
-              )}
-              {context.readingMode === 'questions' && context.activeQuestionId && (
-                <div className="absolute inset-0 bg-blue-300/30 border border-blue-500 rounded cursor-pointer hover:bg-blue-300/50 transition-colors" />
-              )}
-            </div>
-
-            <p>
-              Operating margins remained stable at 22%, thanks to disciplined cost management in the 
-              marketing and sales organizations.
-            </p>
+        <div className="w-[800px] h-[1131px] bg-white text-black shadow-lg relative rounded-sm p-16 flex items-center justify-center">
+          <div className="text-center text-gray-400">
+            <div className="text-4xl mb-4">📄</div>
+            <h3 className="text-xl font-medium mb-2">Document Viewer</h3>
+            <p className="text-sm">Document processing complete. Canvas rendering engine active.</p>
           </div>
         </div>
       </div>

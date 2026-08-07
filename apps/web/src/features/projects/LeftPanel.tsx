@@ -98,37 +98,8 @@ export function LeftPanel({ project }: { project: Project }) {
             })}
           </nav>
         </div>
-
-        <div>
-          <div className="px-2 text-[10px] font-bold text-text-tertiary uppercase tracking-wider mb-2">Recent History</div>
-          <div className="space-y-0.5">
-            <Link href={`/projects/${project.id}/data-room`} className="flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-bg-base transition-colors group">
-              <Clock size={14} className="text-text-tertiary group-hover:text-text-secondary" />
-              <span className="truncate">CIM v2.pdf</span>
-            </Link>
-            <Link href={`/projects/${project.id}/questions`} className="flex items-center gap-3 px-3 py-1.5 rounded-lg text-sm text-text-secondary hover:text-text-primary hover:bg-bg-base transition-colors group">
-              <Clock size={14} className="text-text-tertiary group-hover:text-text-secondary" />
-              <span className="truncate">Pricing power validation</span>
-            </Link>
-          </div>
-        </div>
       </div>
       
-      {/* Footer Tools */}
-      <div className="mt-auto p-2 border-t border-border-subtle bg-bg-surface space-y-0.5">
-        <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-bg-base transition-colors group">
-          <Activity size={16} className="text-text-tertiary group-hover:text-text-secondary" />
-          Project Activity
-        </button>
-        <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-bg-base transition-colors group">
-          <Users size={16} className="text-text-tertiary group-hover:text-text-secondary" />
-          Team & Access
-        </button>
-        <button className="w-full flex items-center gap-3 px-3 py-2 rounded-lg text-sm font-medium text-text-secondary hover:text-text-primary hover:bg-bg-base transition-colors group">
-          <Settings size={16} className="text-text-tertiary group-hover:text-text-secondary" />
-          Settings
-        </button>
-      </div>
     </div>
   );
 }

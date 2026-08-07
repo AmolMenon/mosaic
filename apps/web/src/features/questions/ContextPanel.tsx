@@ -17,32 +17,12 @@ export function ContextPanel() {
     );
   }
 
-  if (!data) return null;
-  const mockHypothesisPremium = data.hypothesisPremium;
-
   return (
     <div className="p-4 h-full bg-bg-surface border-l border-border-subtle flex flex-col">
       <div className="text-xs text-text-tertiary font-mono uppercase tracking-wider mb-6">Hypothesis Context</div>
 
-      <div className="space-y-6">
-        <div>
-          <div className="text-xs font-semibold text-text-secondary mb-2">Referenced Documents</div>
-          <div className="p-2 border border-border-subtle rounded bg-bg-base text-xs text-text-primary hover:bg-bg-surface-hover cursor-pointer transition-colors truncate">
-            📄 Project Titan CIM v2.pdf
-          </div>
-          <div className="p-2 border border-border-subtle rounded bg-bg-base text-xs text-text-primary hover:bg-bg-surface-hover cursor-pointer transition-colors truncate mt-2">
-            📄 Q3 Earnings Transcript.pdf
-          </div>
-        </div>
-
-        <div>
-          <div className="text-xs font-semibold text-text-secondary mb-2">Linked Risks</div>
-          {mockHypothesisPremium.risks.map((r: any) => (
-            <div key={r.id} className="p-2 border border-accent-danger/20 bg-accent-danger/5 rounded text-xs text-text-primary">
-              ⚠️ {r.statement}
-            </div>
-          ))}
-        </div>
+      <div className="text-sm text-text-tertiary italic p-3 text-center border border-dashed border-border-strong rounded-md">
+        No context available.
       </div>
     </div>
   );

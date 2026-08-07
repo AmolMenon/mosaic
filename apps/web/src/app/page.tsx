@@ -6,7 +6,7 @@ import {
   Building2, Activity, Clock, FileText, CheckCircle2, 
   AlertTriangle, Zap, Star, Search, Plus, Bell, Command,
   ArrowRight, Shield, BrainCircuit, BarChart3, Database,
-  Lock, Globe, Users, ChevronRight, Check
+  Lock, Globe, Users, ChevronRight
 } from "lucide-react";
 
 export default function LandingPage() {
@@ -32,12 +32,11 @@ export default function LandingPage() {
           <div className="hidden md:flex items-center gap-8 text-sm font-medium text-text-secondary">
             <Link href="#features" className="hover:text-text-primary transition-colors">Features</Link>
             <Link href="#how-it-works" className="hover:text-text-primary transition-colors">How it Works</Link>
-            <Link href="#pricing" className="hover:text-text-primary transition-colors">Pricing</Link>
           </div>
           <div className="flex items-center gap-4">
-            <Link href="/dashboard" className="text-sm font-medium text-text-secondary hover:text-text-primary transition-colors">Sign In</Link>
-            <Link href="/dashboard" className="text-sm font-semibold bg-text-primary text-bg-base px-4 py-2 rounded-md hover:bg-text-secondary transition-all shadow-sm flex items-center gap-2">
-              Request Access <ArrowRight size={16} />
+            <Link href="/dashboard" className="text-sm font-medium text-text-secondary hover:text-text-primary transition-colors">Dashboard</Link>
+            <Link href="mailto:beta@mosaicos.com" className="text-sm font-semibold bg-text-primary text-bg-base px-4 py-2 rounded-md hover:bg-text-secondary transition-all shadow-sm flex items-center gap-2">
+              Request Beta Access <ArrowRight size={16} />
             </Link>
           </div>
         </div>
@@ -92,10 +91,10 @@ export default function LandingPage() {
             className="flex flex-col sm:flex-row items-center justify-center gap-4"
           >
             <Link href="/dashboard" className="w-full sm:w-auto text-base font-semibold bg-text-primary text-bg-base px-8 py-3.5 rounded-lg hover:bg-text-secondary transition-all shadow-lg flex items-center justify-center gap-2 hover:scale-105 active:scale-95">
-              Get Started for Free <ArrowRight size={18} />
+              Launch Workspace <ArrowRight size={18} />
             </Link>
-            <Link href="#features" className="w-full sm:w-auto text-base font-semibold bg-bg-surface border border-border-strong text-text-primary px-8 py-3.5 rounded-lg hover:bg-bg-surface-hover transition-all flex items-center justify-center gap-2">
-              Read the Docs
+            <Link href="mailto:beta@mosaicos.com" className="w-full sm:w-auto text-base font-semibold bg-bg-surface border border-border-strong text-text-primary px-8 py-3.5 rounded-lg hover:bg-bg-surface-hover transition-all flex items-center justify-center gap-2">
+              Request Beta Access
             </Link>
           </motion.div>
         </div>
@@ -161,79 +160,13 @@ export default function LandingPage() {
         </div>
       </section>
 
-      {/* Pricing */}
-      <section id="pricing" className="py-32 px-6">
-        <div className="max-w-7xl mx-auto">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-4xl font-semibold tracking-tight text-text-primary mb-4">Simple, transparent pricing.</h2>
-            <p className="text-lg text-text-secondary max-w-2xl mx-auto">Start for free, scale when you need the power of unbounded AI.</p>
-          </div>
-          
-          <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
-            {/* Free */}
-            <div className="bg-bg-surface border border-border-subtle rounded-3xl p-8">
-              <h3 className="text-xl font-semibold text-text-primary mb-2">Free</h3>
-              <p className="text-text-secondary text-sm mb-6">Perfect for testing the platform.</p>
-              <div className="text-4xl font-bold text-text-primary mb-6">$0<span className="text-lg text-text-tertiary font-normal">/mo</span></div>
-              <ul className="space-y-4 mb-8">
-                {["1 Active Project", "100 pages of parsed data", "Standard LLMs (GPT-4o-mini)", "Community Support"].map((f, i) => (
-                  <li key={i} className="flex items-center gap-3 text-sm text-text-secondary">
-                    <Check size={16} className="text-text-primary" /> {f}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/dashboard" className="block w-full py-3 px-4 bg-bg-base border border-border-strong rounded-lg text-center font-semibold text-text-primary hover:bg-bg-surface-hover transition-colors">
-                Get Started
-              </Link>
-            </div>
-            
-            {/* Pro */}
-            <div className="bg-bg-base border-2 border-text-primary rounded-3xl p-8 relative shadow-2xl scale-105 z-10">
-              <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-text-primary text-bg-base text-xs font-bold px-3 py-1 rounded-full uppercase tracking-wider">
-                Most Popular
-              </div>
-              <h3 className="text-xl font-semibold text-text-primary mb-2">Pro</h3>
-              <p className="text-text-secondary text-sm mb-6">For boutique PE and strategy teams.</p>
-              <div className="text-4xl font-bold text-text-primary mb-6">$499<span className="text-lg text-text-tertiary font-normal">/seat/mo</span></div>
-              <ul className="space-y-4 mb-8">
-                {["Unlimited Projects", "Unlimited Data Ingestion", "Premium LLMs (Claude 3.5, GPT-4o)", "Automated IC Memos", "Priority Email Support"].map((f, i) => (
-                  <li key={i} className="flex items-center gap-3 text-sm text-text-secondary">
-                    <Check size={16} className="text-text-primary" /> {f}
-                  </li>
-                ))}
-              </ul>
-              <Link href="/dashboard" className="block w-full py-3 px-4 bg-text-primary text-bg-base rounded-lg text-center font-semibold hover:bg-text-secondary transition-colors">
-                Start Free Trial
-              </Link>
-            </div>
-            
-            {/* Enterprise */}
-            <div className="bg-bg-surface border border-border-subtle rounded-3xl p-8">
-              <h3 className="text-xl font-semibold text-text-primary mb-2">Enterprise</h3>
-              <p className="text-text-secondary text-sm mb-6">For Tier-1 funds and global banks.</p>
-              <div className="text-4xl font-bold text-text-primary mb-6">Custom</div>
-              <ul className="space-y-4 mb-8">
-                {["Dedicated VPC Peering", "SOC2 Compliance Reports", "Custom Fine-tuned Heuristics", "Unlimited Seats", "White-glove Onboarding", "24/7 Phone Support"].map((f, i) => (
-                  <li key={i} className="flex items-center gap-3 text-sm text-text-secondary">
-                    <Check size={16} className="text-text-primary" /> {f}
-                  </li>
-                ))}
-              </ul>
-              <Link href="mailto:sales@mosaicos.example.com" className="block w-full py-3 px-4 bg-bg-base border border-border-strong rounded-lg text-center font-semibold text-text-primary hover:bg-bg-surface-hover transition-colors">
-                Contact Sales
-              </Link>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Footer CTA */}
       <section className="py-24 border-t border-border-subtle bg-bg-surface">
         <div className="max-w-4xl mx-auto text-center px-6">
           <h2 className="text-3xl md:text-5xl font-semibold tracking-tight text-text-primary mb-6">Ready to upgrade your diligence?</h2>
           <p className="text-lg text-text-secondary mb-10">Join the top tier of investors utilizing Mosaic OS to extract alpha.</p>
-          <Link href="/dashboard" className="inline-flex items-center gap-2 bg-text-primary text-bg-base px-8 py-4 rounded-lg font-semibold text-lg hover:bg-text-secondary transition-all hover:scale-105">
-            Request Access <ArrowRight size={20} />
+          <Link href="mailto:beta@mosaicos.com" className="inline-flex items-center gap-2 bg-text-primary text-bg-base px-8 py-4 rounded-lg font-semibold text-lg hover:bg-text-secondary transition-all hover:scale-105">
+            Request Beta Access <ArrowRight size={20} />
           </Link>
         </div>
       </section>
