@@ -18,7 +18,9 @@ export async function httpClient<T>(url: string, options: RequestOptions = {}): 
   const id = setTimeout(() => controller.abort(), timeout);
 
   const mergedHeaders = new Headers(headers);
-  mergedHeaders.set('Content-Type', 'application/json');
+  if (!(options.body instanceof FormData)) {
+    mergedHeaders.set('Content-Type', 'application/json');
+  }
   mergedHeaders.set('X-Request-Id', requestId);
   if (token) {
     mergedHeaders.set('Authorization', `Bearer ${token}`);

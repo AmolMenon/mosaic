@@ -3,12 +3,20 @@ import React, { useState } from "react";
 import { UploadCloud, File, X, CheckCircle2, AlertTriangle } from "lucide-react";
 import { motion, AnimatePresence } from "framer-motion";
 import { clsx } from "clsx";
+import { useParams, useRouter } from "next/navigation";
+import { useUploadDocument } from "../../../hooks/queries";
+import { useAiStore } from "../../../store/ai";
 
 export function DocumentUploader() {
   const [isDragging, setIsDragging] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [status, setStatus] = useState<"idle" | "uploading" | "success" | "error">("idle");
   const [progress, setProgress] = useState(0);
+  
+  const params = useParams();
+  const projectId = params.id as string;
+  const router = useRouter();
+  const uploadDoc = useUploadDocument(projectId);
 
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
@@ -33,22 +41,32 @@ export function DocumentUploader() {
     }
   };
 
-  const handleFile = (selectedFile: File) => {
+  const handleFile = async (selectedFile: File) => {
     setFile(selectedFile);
     setStatus("uploading");
-    setProgress(0);
+    setProgress(10);
     
-    // Simulate upload progress
-    const interval = setInterval(() => {
-      setProgress((prev) => {
-        if (prev >= 100) {
-          clearInterval(interval);
-          setStatus("success");
-          return 100;
-        }
-        return prev + 5;
-      });
-    }, 100);
+    try {
+      const formData = new FormData();
+      formData.append("document", selectedFile);
+      if (projectId) {
+        formData.append("projectId", projectId);
+      }
+      
+      const res = await uploadDoc.mutateAsync(formData);
+      setProgress(100);
+      setStatus("success");
+      
+      if (res.execution && res.execution.execution_id) {
+         useAiStore.getState().setActiveExecution(res.execution.execution_id);
+         setTimeout(() => {
+           router.push(`/projects/${projectId}?tab=ai`);
+         }, 1000);
+      }
+    } catch (err) {
+      console.error(err);
+      setStatus("error");
+    }
   };
 
   const reset = () => {

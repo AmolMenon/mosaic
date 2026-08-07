@@ -40,10 +40,10 @@ export function LeftPanel() {
       </div>
 
       <div className="mb-6">
-        <div className="text-[10px] font-mono text-text-secondary uppercase mb-2">Active Workflows</div>
+        <div className="text-[10px] font-mono text-text-secondary uppercase mb-2">Active Documents</div>
         {activeWorkflows.length === 0 ? (
           <div className="p-3 border border-dashed border-border-strong rounded bg-bg-base text-center text-xs text-text-tertiary">
-            No active workflows.
+            No active documents.
           </div>
         ) : (
           <div className="space-y-2">
@@ -86,7 +86,7 @@ export function LeftPanel() {
         <div className="text-[10px] font-mono text-text-secondary uppercase mb-2">Completed</div>
         {completedWorkflows.length === 0 ? (
           <div className="p-3 border border-dashed border-border-strong rounded bg-bg-base text-center text-xs text-text-tertiary">
-            No recently completed pipelines.
+            No recently completed documents.
           </div>
         ) : (
           <div className="space-y-2">

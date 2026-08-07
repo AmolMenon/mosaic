@@ -25,4 +25,10 @@ export class ProjectService {
       body: JSON.stringify({ name })
     });
   }
+
+  static async delete(id: string): Promise<void> {
+    return httpClient<void>(`/api/v1/projects/${id}`, {
+      method: 'DELETE'
+    });
+  }
 }

@@ -21,7 +21,7 @@ aiRouter.get("/", requireAuth, async (req: any, res: any, next: any) => {
       orderBy: { created_at: 'desc' }
     });
 
-    res.json(formatSuccessResponse(proposals.map(p => p.payload)));
+    res.json(formatSuccessResponse(proposals.map((p: any) => p.payload)));
   } catch (err) {
     next(err);
   }

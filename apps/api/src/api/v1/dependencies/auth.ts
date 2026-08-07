@@ -24,7 +24,7 @@ export async function requireAuth(req: any, res: any, next: any) {
     
     req.principal = {
       id: user.id,
-      roles: user.memberships.map(m => m.role),
+      roles: user.memberships.map((m: any) => m.role),
       organizationId: user.memberships[0]?.organizationId
     };
     

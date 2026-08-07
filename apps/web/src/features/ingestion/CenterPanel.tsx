@@ -9,7 +9,7 @@ export function CenterPanel() {
   const { activeStageId, setActiveStage } = useIngestionStore();
   const { data, isLoading } = useIngestion();
 
-  if (isLoading) return <div className="flex-1 overflow-hidden bg-bg-base p-8 text-text-tertiary">Loading pipeline...</div>;
+  if (isLoading) return <div className="flex-1 overflow-hidden bg-bg-base p-8 text-text-tertiary">Loading document...</div>;
   if (!data) return null;
 
   const { pipelineTranscript: pipeline } = data;
@@ -17,7 +17,7 @@ export function CenterPanel() {
   return (
     <div className="flex flex-col h-full overflow-hidden bg-bg-base">
       
-      {/* Pipeline Header */}
+      {/* Document Header */}
       <div className="p-8 border-b border-border-subtle bg-bg-surface flex-shrink-0">
         <div className="max-w-4xl mx-auto flex justify-between items-end">
           <div>
@@ -25,13 +25,13 @@ export function CenterPanel() {
               <span className="text-[10px] font-bold text-accent-primary uppercase tracking-wider bg-selection-bg px-2 py-1 rounded border border-accent-primary/20">
                 Profile: {pipeline.profile.replace('_', ' ')}
               </span>
-              <span className="text-xs font-mono text-text-secondary">Pipeline: {pipeline.id}</span>
+              <span className="text-xs font-mono text-text-secondary">Analysis: {pipeline.id}</span>
             </div>
             <h1 className="text-2xl font-bold text-text-primary mb-2">Document: {pipeline.documentId}</h1>
           </div>
           <div className="flex gap-2">
             <button className="flex items-center gap-2 px-3 py-1.5 bg-bg-surface border border-border-strong rounded hover:bg-bg-surface-hover text-sm">
-              <RotateCcw size={14} /> Replay Pipeline
+              <RotateCcw size={14} /> Restart Analysis
             </button>
           </div>
         </div>
@@ -40,7 +40,7 @@ export function CenterPanel() {
       <div className="flex-1 overflow-y-auto p-8">
         <div className="max-w-4xl mx-auto space-y-8">
           
-          <div className="text-lg font-bold text-text-primary mb-4">Workflow Execution</div>
+          <div className="text-lg font-bold text-text-primary mb-4">Document Processing</div>
           
           <div className="space-y-4">
             {pipeline.stages.map((stage: any, idx: number) => {
@@ -125,7 +125,7 @@ export function CenterPanel() {
                       {stage.status === 'awaiting_human' && (
                         <div className="flex gap-2 pt-2 border-t border-border-subtle">
                           <button className="flex items-center gap-1.5 px-3 py-1.5 bg-accent-primary text-bg-base rounded text-xs font-bold hover:opacity-90">
-                            <Play size={14} /> Resume Pipeline
+                            <Play size={14} /> Resume Processing
                           </button>
                           <button className="flex items-center gap-1.5 px-3 py-1.5 bg-bg-surface border border-border-strong text-text-primary rounded text-xs font-bold hover:bg-bg-surface-hover">
                             <SkipForward size={14} /> Skip Stage

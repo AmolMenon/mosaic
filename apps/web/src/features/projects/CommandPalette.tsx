@@ -65,7 +65,7 @@ export function CommandPalette() {
                 </div>
                 <div>
                   <div className="text-sm font-medium text-text-primary">Synthesize recent uploads</div>
-                  <div className="text-xs text-text-tertiary">Run AI pipeline on 4 new data room files</div>
+                  <div className="text-xs text-text-tertiary">Run AI analysis on 4 new data room files</div>
                 </div>
               </button>
               

@@ -12,21 +12,33 @@ export class ExecutionEvents {
 
   constructor(private url: string) {}
 
+  private retryCount = 0;
+  private maxRetries = 5;
+  private retryTimeout: ReturnType<typeof setTimeout> | null = null;
+
   connect() {
+    if (this.eventSource) {
+      this.disconnect();
+    }
     this.eventSource = new EventSource(this.url, { withCredentials: true });
     
     this.eventSource.onmessage = (e) => {
       try {
         const data = JSON.parse(e.data);
         this.listeners.forEach(l => l(data));
+        this.retryCount = 0; // Reset on success
       } catch (err) {
-        console.error("Failed to parse SSE payload", err);
+        // Silently ignore parse errors in production
       }
     };
 
     this.eventSource.onerror = (e) => {
-      console.error("SSE Error", e);
       this.disconnect();
+      if (this.retryCount < this.maxRetries) {
+        const delay = Math.min(1000 * Math.pow(2, this.retryCount), 30000);
+        this.retryCount++;
+        this.retryTimeout = setTimeout(() => this.connect(), delay);
+      }
     };
   }
 
@@ -38,6 +50,10 @@ export class ExecutionEvents {
   }
 
   disconnect() {
+    if (this.retryTimeout) {
+      clearTimeout(this.retryTimeout);
+      this.retryTimeout = null;
+    }
     if (this.eventSource) {
       this.eventSource.close();
       this.eventSource = null;

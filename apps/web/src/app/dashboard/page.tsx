@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Link from "next/link";
 import { motion, Variants } from "framer-motion";
 import { 
@@ -8,6 +8,8 @@ import {
 } from "lucide-react";
 import { AppShell } from "@mosaic/ui";
 import { GlobalSidebar } from "../../components/GlobalSidebar";
+import { NotificationCenter } from "../../components/NotificationCenter";
+import { CreateProjectModal } from "../../features/projects/CreateProjectModal";
 
 const containerVariants: Variants = {
   hidden: { opacity: 0 },
@@ -23,6 +25,8 @@ const itemVariants: Variants = {
 };
 
 export default function HomeDashboard() {
+  const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
+
   return (
     <AppShell sidebar={<GlobalSidebar />}>
       <div className="flex flex-col h-full overflow-hidden bg-bg-base font-ui">
@@ -45,9 +49,7 @@ export default function HomeDashboard() {
           </div>
           
           <div className="w-1/3 flex justify-end gap-3 items-center ml-auto">
-            <button className="w-8 h-8 flex items-center justify-center text-text-secondary hover:text-text-primary hover:bg-bg-surface-hover rounded-full transition-colors relative">
-              <Bell size={18} />
-            </button>
+            <NotificationCenter />
             <div className="w-8 h-8 rounded-full bg-bg-base border border-border-strong text-text-secondary flex items-center justify-center font-bold text-xs">
               <User size={14} />
             </div>
@@ -72,7 +74,10 @@ export default function HomeDashboard() {
                 <button className="flex items-center gap-2 px-4 py-2 bg-bg-surface border border-border-strong rounded-md text-sm font-medium hover:bg-bg-surface-hover transition-colors">
                   <Activity size={16} /> System Health
                 </button>
-                <button className="flex items-center gap-2 px-4 py-2 bg-text-primary text-bg-base rounded-md text-sm font-medium hover:bg-text-secondary transition-colors shadow-sm">
+                <button 
+                  onClick={() => setIsCreateModalOpen(true)}
+                  className="flex items-center gap-2 px-4 py-2 bg-text-primary text-bg-base rounded-md text-sm font-medium hover:bg-text-secondary transition-colors shadow-sm"
+                >
                   <Plus size={16} /> New Company
                 </button>
               </div>
@@ -82,7 +87,7 @@ export default function HomeDashboard() {
             <motion.div variants={itemVariants} className="grid grid-cols-4 gap-4">
               {[
                 { label: "Active Companies", value: "-", icon: Building2, color: "text-text-tertiary" },
-                { label: "Running Executions", value: "-", icon: Zap, color: "text-text-tertiary" },
+                { label: "Active Processing", value: "-", icon: Zap, color: "text-text-tertiary" },
                 { label: "Assigned Reviews", value: "-", icon: CheckCircle2, color: "text-text-tertiary" },
                 { label: "Recent Documents", value: "-", icon: FileText, color: "text-text-tertiary" },
               ].map((metric, i) => (
@@ -119,9 +124,9 @@ export default function HomeDashboard() {
                   </div>
                 </motion.div>
 
-                {/* AI Pipeline Telemetry */}
+                {/* AI Processing Telemetry */}
                 <motion.div variants={itemVariants}>
-                  <h2 className="text-sm font-bold uppercase tracking-wider text-text-tertiary mb-4">Active Executions</h2>
+                  <h2 className="text-sm font-bold uppercase tracking-wider text-text-tertiary mb-4">Active Processing</h2>
                   <div className="border border-border-subtle rounded-xl p-8 flex flex-col items-center justify-center text-center bg-bg-surface/50">
                     <div className="w-10 h-10 rounded-full bg-bg-base border border-border-subtle flex items-center justify-center mb-3">
                       <Zap size={20} className="text-text-tertiary" />
@@ -147,6 +152,7 @@ export default function HomeDashboard() {
             </div>
             
           </motion.div>
+          <CreateProjectModal isOpen={isCreateModalOpen} onClose={() => setIsCreateModalOpen(false)} />
         </div>
       </div>
     </AppShell>

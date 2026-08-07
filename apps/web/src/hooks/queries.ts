@@ -93,11 +93,27 @@ export function useUploadDocument(projectId?: string) {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: (formData: FormData) => {
-      return httpClient<any>('/api/v1/ingestion/upload', {
+    mutationFn: async (formData: FormData) => {
+      const uploadRes = await httpClient<any>('/api/v1/ingestion/upload', {
         method: 'POST',
         body: formData
-      }).then(r => r.data);
+      });
+      
+      const doc = uploadRes.data.document;
+      const projectId = formData.get("projectId") as string;
+      
+      if (projectId && doc && doc.id) {
+        // Create execution automatically after upload
+        const execRes = await httpClient<any>('/api/v1/executions', {
+            method: 'POST',
+            body: JSON.stringify({ projectId, documentId: doc.id }),
+            headers: {
+              'Content-Type': 'application/json'
+            }
+        });
+        return { document: doc, execution: execRes.data };
+      }
+      return uploadRes.data;
     },
     onSuccess: () => {
       if (projectId) {

@@ -21,3 +21,14 @@ export function useCreateProject() {
     }
   });
 }
+
+export function useDeleteProject() {
+  const queryClient = useQueryClient();
+  
+  return useMutation({
+    mutationFn: (id: string) => ProjectService.delete(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: queryKeys.projects.all() });
+    }
+  });
+}

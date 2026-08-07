@@ -10,7 +10,7 @@ export function ContextPanel() {
   if (!activeProposalId) {
     return (
       <div className="p-4 h-full bg-bg-surface border-l border-border-subtle text-text-tertiary text-sm flex items-center justify-center text-center">
-        Select a proposal to review<br/>its underlying AI reasoning.
+        Select an insight to review<br/>its underlying AI reasoning.
       </div>
     );
   }

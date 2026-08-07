@@ -22,7 +22,7 @@ export class ErrorBoundary extends Component<Props, State> {
   }
 
   public componentDidCatch(error: Error, errorInfo: ErrorInfo) {
-    console.error("Uncaught error:", error, errorInfo);
+    // Intentionally omitting console.error for production clean logs
   }
 
   public render() {
@@ -35,9 +35,6 @@ export class ErrorBoundary extends Component<Props, State> {
           <div className="p-6 max-w-lg bg-bg-surface border border-border-subtle rounded-lg shadow-sm">
             <h1 className="text-xl font-bold mb-4 text-red-500">Something went wrong.</h1>
             <p className="text-text-secondary mb-4">An unexpected error occurred in the application.</p>
-            <pre className="text-left text-xs bg-bg-subtle p-4 rounded overflow-auto text-text-tertiary">
-              {this.state.error?.message}
-            </pre>
             <button 
               className="mt-6 px-4 py-2 bg-text-primary text-bg-base rounded hover:opacity-90 font-medium"
               onClick={() => window.location.reload()}

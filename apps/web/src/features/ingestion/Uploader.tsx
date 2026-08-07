@@ -44,9 +44,9 @@ export function Uploader({ onUploadSuccess }: UploaderProps) {
     uploadDoc.mutateAsync(formData)
       .then(res => {
         clearInterval(interval);
-        setQueue(prev => prev.map(q => q.id === id ? { ...q, status: "complete", progress: 100, pipelineId: res.pipeline?.id } : q));
-        if (res.pipeline) {
-          onUploadSuccess(res.pipeline);
+        setQueue(prev => prev.map(q => q.id === id ? { ...q, status: "complete", progress: 100, pipelineId: res.execution?.execution_id } : q));
+        if (res.execution) {
+          onUploadSuccess(res.execution);
         }
       })
       .catch(err => {

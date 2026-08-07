@@ -125,3 +125,27 @@ projectsRouter.post("/", requireAuth, async (req: any, res: any, next: any) => {
     next(err);
   }
 });
+
+projectsRouter.delete("/:id", requireAuth, async (req: any, res: any, next: any) => {
+  try {
+    const project = await prisma.project.findUnique({
+      where: { id: req.params.id }
+    });
+    
+    if (!project) {
+      throw new ApiException(404, "NOT_FOUND", "Project not found");
+    }
+    
+    if (project.organizationId !== req.principal.organizationId) {
+      throw new ApiException(403, "FORBIDDEN", "Not authorized to delete this project");
+    }
+
+    await prisma.project.delete({
+      where: { id: req.params.id }
+    });
+    
+    res.json(formatSuccessResponse({ deleted: true }));
+  } catch (err) {
+    next(err);
+  }
+});

@@ -10,7 +10,7 @@ export function ContextPanel() {
   if (!activeArgumentBlockId) {
     return (
       <div className="p-4 h-full bg-bg-surface border-l border-border-subtle text-text-tertiary text-sm flex items-center justify-center text-center">
-        Select an Argument Block<br/>to view its evidence context.
+        Select an Argument Block<br/>to view its supporting evidence.
       </div>
     );
   }
