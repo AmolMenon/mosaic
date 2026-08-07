@@ -2,9 +2,13 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
+# Install dependencies needed for node-gyp if required
+RUN apk add --no-cache python3 make g++ git
+
+ENV HUSKY=0
 RUN corepack enable pnpm
 COPY . .
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
 
 # Assuming worker is part of the API workspace or a separate worker workspace
 RUN pnpm --filter api run build

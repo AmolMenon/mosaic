@@ -2,9 +2,13 @@
 FROM node:20-alpine AS builder
 WORKDIR /app
 
+# Install dependencies needed for node-gyp if required
+RUN apk add --no-cache python3 make g++ git
+
+ENV HUSKY=0
 RUN corepack enable pnpm
 COPY . .
-RUN pnpm install
+RUN pnpm install --frozen-lockfile
 
 # We specify the Next.js telemetry disable
 ENV NEXT_TELEMETRY_DISABLED=1
