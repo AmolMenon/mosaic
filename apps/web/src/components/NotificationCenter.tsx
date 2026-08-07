@@ -113,7 +113,7 @@ export function NotificationCenter() {
                   <div className="w-10 h-10 rounded-full bg-bg-base border border-border-subtle flex items-center justify-center mb-3">
                     <CheckCircle2 size={18} className="text-text-tertiary" />
                   </div>
-                  <span className="text-sm font-medium text-text-secondary">You're all caught up.</span>
+                  <span className="text-sm font-medium text-text-secondary">You&apos;re all caught up.</span>
                 </div>
               )}
             </div>
