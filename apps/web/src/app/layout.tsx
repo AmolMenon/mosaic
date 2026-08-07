@@ -7,6 +7,7 @@ const outfit = Outfit({ subsets: ["latin"], variable: "--font-outfit" });
 
 import { QueryProvider } from "../providers/QueryProvider";
 import { ErrorBoundary } from "../components/ErrorBoundary";
+import { CommandPalette } from "../features/projects/CommandPalette";
 
 export const metadata: Metadata = {
   title: "Mosaic | The Evidence Layer",
@@ -22,7 +23,10 @@ export default function RootLayout({
     <html lang="en" className={`${inter.variable} ${outfit.variable}`}>
       <body style={{ margin: 0, padding: 0 }}>
         <ErrorBoundary>
-          <QueryProvider>{children}</QueryProvider>
+          <QueryProvider>
+            {children}
+            <CommandPalette />
+          </QueryProvider>
         </ErrorBoundary>
       </body>
     </html>

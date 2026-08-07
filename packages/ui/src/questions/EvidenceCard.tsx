@@ -1,6 +1,8 @@
+"use client";
 import React from "react";
 import { Evidence, ClaimEvidenceLink, ConfidenceLevel } from "@mosaic/contracts";
 import { clsx } from "clsx";
+import { motion } from "framer-motion";
 
 export interface EvidenceCardProps {
   evidence: Evidence;
@@ -34,33 +36,42 @@ export function EvidenceCard({
   const isDimmed = link.confidence === "low";
 
   return (
-    <div
+    <motion.div
+      layout
+      whileHover={{ scale: 1.01, y: -2 }}
+      whileTap={{ scale: 0.99 }}
+      transition={{ type: "spring", stiffness: 400, damping: 25 }}
       onMouseEnter={onHover}
       onMouseLeave={onLeave}
       onClick={onClick}
       className={clsx(
-        "p-3 rounded-md bg-bg-base border flex flex-col gap-2 transition-all cursor-pointer relative",
+        "p-4 rounded-xl bg-bg-surface/80 backdrop-blur-sm border flex flex-col gap-2 transition-colors cursor-pointer relative shadow-sm font-ui",
         roleStyle,
-        isTraced ? "ring-2 ring-offset-2 ring-accent-primary bg-bg-surface-active" : "hover:bg-bg-surface",
-        isDimmed && "opacity-60"
+        isTraced ? "ring-1 ring-offset-2 ring-accent-primary bg-bg-surface-active shadow-md" : "hover:bg-bg-surface hover:shadow-md",
+        isDimmed && "opacity-60 hover:opacity-100"
       )}
     >
       {isTraced && (
-        <div className="absolute -left-2 top-1/2 w-4 h-[1px] bg-accent-primary shadow-[0_0_8px_var(--color-accent-primary)]" />
+        <motion.div 
+          layoutId="trace-indicator"
+          className="absolute -left-3 top-1/2 -translate-y-1/2 w-6 h-[2px] bg-accent-primary shadow-[0_0_12px_var(--color-accent-primary)] rounded-full" 
+        />
       )}
       
-      <div className="flex justify-between items-center text-[10px] font-mono uppercase tracking-wider">
-        <span>{link.role}</span>
-        <span className="opacity-70">{link.confidence} conf</span>
+      <div className="flex justify-between items-center text-[10px] font-mono uppercase tracking-widest mb-1">
+        <span className="font-semibold">{link.role}</span>
+        <span className="opacity-70 px-2 py-0.5 rounded-full bg-bg-base border border-border-subtle">{link.confidence} conf</span>
       </div>
       
-      <div className={clsx("text-sm text-text-primary", isDimmed ? "text-text-secondary" : "")}>
+      <div className={clsx("text-sm text-text-primary leading-relaxed", isDimmed ? "text-text-secondary" : "")}>
         "{evidence.text}"
       </div>
       
-      <div className="flex justify-between items-center mt-1 pt-2 border-t border-border-subtle/50 text-[11px] text-text-tertiary">
-        <span>Pg {evidence.provenance.page} • Para {evidence.provenance.paragraph}</span>
+      <div className="flex justify-between items-center mt-2 pt-3 border-t border-border-subtle/30 text-xs font-medium text-text-tertiary">
+        <span className="hover:text-text-secondary transition-colors">
+          Pg {evidence.provenance.page} • Para {evidence.provenance.paragraph}
+        </span>
       </div>
-    </div>
+    </motion.div>
   );
 }

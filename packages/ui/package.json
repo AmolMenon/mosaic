@@ -6,14 +6,15 @@
   "dependencies": {
     "@radix-ui/react-slot": "^1.0.2",
     "clsx": "^2.1.0",
+    "framer-motion": "^13.0.0",
     "tailwind-merge": "^2.2.2"
   },
   "devDependencies": {
+    "@mosaic/config": "workspace:*",
+    "@mosaic/contracts": "workspace:*",
+    "@types/react": "^19.0.0",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
-    "typescript": "^5.4.5",
-    "@types/react": "^19.0.0",
-    "@mosaic/config": "workspace:*",
-    "@mosaic/contracts": "workspace:*"
+    "typescript": "^5.4.5"
   }
 }
