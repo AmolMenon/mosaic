@@ -1,3 +1,10 @@
+import { Pool } from "pg";
+import { PrismaPg } from "@prisma/adapter-pg";
+
+const connectionString = process.env.DATABASE_URL;
+const pool = new Pool({ connectionString });
+const adapter = new PrismaPg(pool);
+
 import { Router } from "express";
 import { requireAuth } from "../dependencies/auth";
 import { parsePagination } from "../dependencies/pagination";
@@ -6,7 +13,7 @@ import { ApiException } from "../schemas/errors/errors";
 import { PrismaClient } from "@prisma/client";
 
 export const projectsRouter: import("express").Router = Router();
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ adapter });
 
 projectsRouter.get("/", requireAuth, parsePagination, async (req: any, res: any, next: any) => {
   try {

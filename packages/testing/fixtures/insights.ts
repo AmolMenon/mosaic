@@ -17,8 +17,8 @@ export const mockInsightPricing: Insight = {
     conflictingHypothesisIds: [mockHypothesisVulnerable.id],
     supportingEvidenceIds: ["ev_1"],
     contradictingEvidenceIds: ["ev_2"],
-    outstandingAssumptionIds: mockHypothesisPremium.assumptions.map(a => a.id),
-    outstandingRiskIds: mockHypothesisPremium.risks.map(r => r.id),
+    outstandingAssumptionIds: mockHypothesisPremium.assumptions.map((a: any) => a.id),
+    outstandingRiskIds: mockHypothesisPremium.risks.map((r: any) => r.id),
     confidence: "medium",
     confidenceExplanation: "Medium confidence due to strong enterprise retention history counterbalanced by missing Q4 win/loss mid-market data."
   },

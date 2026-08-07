@@ -1,6 +1,5 @@
 import { Memo, MemoSection, MemoBlock, MemoVersion } from "@mosaic/contracts";
 import { mockPrinciplePricingPower } from "./knowledge";
-import { mockArgumentBlockPricing } from "./narrative"; // We'll need to assume this exists or use a mock id
 
 export const mockMemoBlockPrinciple: MemoBlock = {
   id: "mb_01",

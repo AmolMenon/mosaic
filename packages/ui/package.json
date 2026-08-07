@@ -16,5 +16,11 @@
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
     "typescript": "^5.4.5"
+  },
+  "scripts": {
+    "build": "echo \"No build required\"",
+    "lint": "echo \"No lint required\"",
+    "typecheck": "tsc --noEmit",
+    "test": "echo \"No test required\""
   }
 }

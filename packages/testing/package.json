@@ -4,7 +4,16 @@
   "private": true,
   "main": "index.ts",
   "devDependencies": {
-    "typescript": "^5.4.5",
-    "@mosaic/config": "workspace:*"
+    "@mosaic/config": "workspace:*",
+    "typescript": "^5.4.5"
+  },
+  "scripts": {
+    "build": "echo \"No build required\"",
+    "lint": "echo \"No lint required\"",
+    "typecheck": "tsc --noEmit",
+    "test": "echo \"No test required\""
+  },
+  "dependencies": {
+    "@mosaic/contracts": "workspace:^"
   }
 }

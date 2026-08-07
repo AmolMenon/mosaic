@@ -1,6 +1,12 @@
 import { PrismaClient } from "@prisma/client";
+import { Pool } from "pg";
+import { PrismaPg } from "@prisma/adapter-pg";
 import { DatabaseHealth } from "./DatabaseHealth";
 import { logger } from "../../../utils/logger";
+
+const connectionString = process.env.DATABASE_URL;
+const pool = new Pool({ connectionString });
+const adapter = new PrismaPg(pool);
 
 /**
  * PostgreSQL Database Client for the persistence layer wrapping Prisma.
@@ -9,7 +15,7 @@ export class Database {
   public client: PrismaClient;
 
   constructor() {
-    this.client = new PrismaClient().$extends({
+    this.client = new PrismaClient({ adapter }).$extends({
       query: {
         $allModels: {
           async $allOperations({ operation, model, args, query }) {

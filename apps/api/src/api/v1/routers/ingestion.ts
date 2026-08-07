@@ -1,3 +1,10 @@
+import { Pool } from "pg";
+import { PrismaPg } from "@prisma/adapter-pg";
+
+const connectionString = process.env.DATABASE_URL;
+const pool = new Pool({ connectionString });
+const adapter = new PrismaPg(pool);
+
 import { Router } from "express";
 import { requireAuth } from "../dependencies/auth";
 import { formatSuccessResponse } from "../dependencies/responses";
@@ -6,7 +13,7 @@ import { PrismaClient } from "@prisma/client";
 import multer from "multer";
 
 const storageProvider = new S3StorageProvider();
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ adapter });
 const upload = multer({ storage: multer.memoryStorage() });
 
 export const ingestionRouter: import("express").Router = Router();

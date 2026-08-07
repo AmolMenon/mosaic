@@ -1,3 +1,10 @@
+import { Pool } from "pg";
+import { PrismaPg } from "@prisma/adapter-pg";
+
+const connectionString = process.env.DATABASE_URL;
+const pool = new Pool({ connectionString });
+const adapter = new PrismaPg(pool);
+
 import { Router } from 'express';
 import { PrismaClient } from '@prisma/client';
 
@@ -9,7 +16,7 @@ healthRouter.get('/live', (req, res) => {
 
 healthRouter.get('/ready', async (req, res) => {
   try {
-    const prisma = new PrismaClient();
+    const prisma = new PrismaClient({ adapter });
     await prisma.$queryRaw`SELECT 1`;
     res.status(200).json({ 
       status: 'READY',

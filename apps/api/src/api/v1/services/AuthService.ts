@@ -1,9 +1,16 @@
+import { Pool } from "pg";
+import { PrismaPg } from "@prisma/adapter-pg";
+
+const connectionString = process.env.DATABASE_URL;
+const pool = new Pool({ connectionString });
+const adapter = new PrismaPg(pool);
+
 import { PrismaClient } from "@prisma/client";
 import { v4 as uuidv4 } from "uuid";
 import crypto from "crypto";
 import jwt from "jsonwebtoken";
 
-const prisma = new PrismaClient();
+const prisma = new PrismaClient({ adapter });
 const JWT_SECRET = process.env.JWT_SECRET as string;
 const JWT_ISSUER = "mosaic-os";
 const JWT_AUDIENCE = "mosaic-api";

@@ -56,15 +56,21 @@ export const mockLink2: ClaimEvidenceLink = {
   confidence: "medium"
 };
 
-export const mockInsight1: Insight = {
+export const mockInsight1 = {
   id: "insight_1",
-  questionId: "q_1",
-  summary: "While top-line enterprise growth remains strong at 15%, increasing churn signals underlying retention risks."
-};
+  projectId: "prj_01",
+  statement: "While top-line enterprise growth remains strong at 15%, increasing churn signals underlying retention risks.",
+  status: "draft",
+  category: "commercial",
+  isPromotedToPrinciple: false
+} as unknown as Insight;
 
 export const mockQuestion1: Question = {
   id: "q_1",
   projectId: "prj_01HVKM4T",
   text: "Where does the projected 15% YoY growth originate?",
-  status: "answered"
+  status: "answered",
+  category: "financial",
+  priority: "high",
+  createdAt: "2026-08-01T00:00:00Z"
 };

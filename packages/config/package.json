@@ -9,5 +9,11 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-react": "^7.34.1",
     "typescript": "^5.4.5"
+  },
+  "scripts": {
+    "build": "echo \"No build required\"",
+    "lint": "echo \"No lint required\"",
+    "typecheck": "echo \"No typecheck required\"",
+    "test": "echo \"No test required\""
   }
 }

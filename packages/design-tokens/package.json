@@ -2,5 +2,11 @@
   "name": "@mosaic/design-tokens",
   "version": "0.1.0",
   "private": true,
-  "style": "src/index.css"
+  "style": "src/index.css",
+  "scripts": {
+    "build": "echo \"No build required\"",
+    "lint": "echo \"No lint required\"",
+    "typecheck": "echo \"No typecheck required\"",
+    "test": "echo \"No test required\""
+  }
 }

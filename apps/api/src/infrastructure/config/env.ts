@@ -23,10 +23,7 @@ export function validateEnv() {
     if (error instanceof z.ZodError) {
       logger.error("Environment variables validation failed", { errors: error.errors });
     }
-    // In strict production, we might want to crash here. Since this is for a demo, we'll log it.
-    if (process.env.NODE_ENV === "production") {
-      logger.error("Missing required environment variables in production. Shutting down.");
-      process.exit(1);
-    }
+    logger.error("Missing required environment variables. Shutting down.");
+    process.exit(1);
   }
 }

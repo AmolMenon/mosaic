@@ -26,37 +26,7 @@ export function Uploader({ onUploadSuccess }: UploaderProps) {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const folderInputRef = useRef<HTMLInputElement>(null);
 
-  const processFiles = (files: File[]) => {
-    setQueue((prev) => {
-      const newItems: QueueItem[] = [];
-      const updatedQueue = [...prev];
-
-      files.forEach((file) => {
-        const isDuplicate = updatedQueue.some(
-          (item) => item.file.name === file.name && item.file.size === file.size
-        );
-        const id = `${file.name}-${file.size}-${Date.now()}`;
-        
-        const newItem: QueueItem = {
-          id,
-          file,
-          progress: 0,
-          status: isDuplicate ? "duplicate" : "pending",
-          errorMessage: isDuplicate ? "Duplicate file detected" : undefined,
-        };
-        newItems.push(newItem);
-        updatedQueue.unshift(newItem); // Add to top of queue
-      });
-
-      newItems.filter(item => item.status === "pending").forEach(item => {
-        handleUpload(item.id, item.file);
-      });
-
-      return updatedQueue;
-    });
-  };
-
-  const handleUpload = (id: string, file: File) => {
+  const handleUpload = useCallback((id: string, file: File) => {
     setQueue(prev => prev.map(q => q.id === id ? { ...q, status: "uploading", progress: 10 } : q));
     
     const formData = new FormData();
@@ -83,7 +53,43 @@ export function Uploader({ onUploadSuccess }: UploaderProps) {
         clearInterval(interval);
         setQueue(prev => prev.map(q => q.id === id ? { ...q, status: "error", errorMessage: err.message || "Upload failed" } : q));
       });
-  };
+  }, [uploadDoc, onUploadSuccess]);
+
+  const processFiles = useCallback((files: File[]) => {
+    setQueue((prev) => {
+      const newItems: QueueItem[] = [];
+      const updatedQueue = [...prev];
+
+      files.forEach((file) => {
+        const isDuplicate = updatedQueue.some(
+          (item) => item.file.name === file.name && item.file.size === file.size
+        );
+        const id = `${file.name}-${file.size}-${Date.now()}`;
+        
+        const newItem: QueueItem = {
+          id,
+          file,
+          progress: 0,
+          status: isDuplicate ? "duplicate" : "pending",
+          errorMessage: isDuplicate ? "Duplicate file detected" : undefined,
+        };
+        newItems.push(newItem);
+        updatedQueue.unshift(newItem); // Add to top of queue
+      });
+
+      // After updating queue, trigger upload for new items
+      if (newItems.length > 0) {
+        // We delay the upload start slightly to allow the UI to reflect the queued state
+        setTimeout(() => {
+          newItems.filter(item => item.status === "pending").forEach(item => {
+            handleUpload(item.id, item.file);
+          });
+        }, 100);
+      }
+
+      return updatedQueue;
+    });
+  }, [handleUpload]);
 
   const handleRetry = (item: QueueItem) => {
     setQueue(prev => prev.map(q => q.id === item.id ? { ...q, status: "pending", errorMessage: undefined } : q));
